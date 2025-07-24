@@ -7,3 +7,5 @@ server/*.log
 
 # Environment variables
 server/.env
+
+node_modules/
