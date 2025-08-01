@@ -23,7 +23,7 @@ const UserController = {
     const user = await User.delete(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ message: 'User deleted', user });
-  },
+  }
 };
 
 module.exports = UserController; 

@@ -1,13 +1,29 @@
 const { ObjectId } = require('mongodb');
 const connectDB = require('../db');
 
-const useDb = true;
+const useDb = false;
 
 let mockUsers = [{
   id: '1',
   name: 'John Doe',
   email: 'john.doe@example.com',
   password: 'password',
+  address: {
+    name: "123 Main Street, New York, NY 10001",
+    lat: 40.7128,
+    lng: -74.0060,
+  },
+  createdAt: new Date(),
+}, {
+  id: '2',
+  name: 'Jane Doe',
+  email: 'jane.doe@example.com',
+  password: 'password',
+  address: {
+    name: "456 Oak Avenue, Los Angeles, CA 90210",
+    lat: 34.0522,
+    lng: -118.2437,
+  },
   createdAt: new Date(),
 }];
 

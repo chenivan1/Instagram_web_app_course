@@ -1,6 +1,7 @@
 let map;
 let markers = [];
-let addresses = [];
+let infoWindows = [];
+let users = [];
 
 // Function to check if Google Maps API is loaded
 function isGoogleMapsLoaded() {
@@ -9,10 +10,8 @@ function isGoogleMapsLoaded() {
 
 // Initialize the map
 function initMap() {
-    // Default center (United States)
     const defaultCenter = { lat: 39.8283, lng: -98.5795 };
     
-    // Create the map
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 4,
         center: defaultCenter,
@@ -26,24 +25,22 @@ function initMap() {
         ]
     });
     
-    // Hide loading indicator
     document.getElementById('loading').style.display = 'none';
     
-    // Fetch addresses data
-    fetchAddresses();
+    fetchUsers();
 }
 
 // Function to fetch addresses data using AJAX
-function fetchAddresses() {
+function fetchUsers() {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/addresses/api', true);
+    xhr.open('GET', '/user', true);
     
     xhr.onload = function() {
         if (xhr.status === 200) {
             try {
                 const data = JSON.parse(xhr.responseText);
-                addresses = data.addresses || [];
-                displayAddresses();
+                users = data || [];
+                displayUsersAddresses();
                 addMarkersToMap();
             } catch (error) {
                 showError('Error parsing addresses data');
@@ -61,70 +58,65 @@ function fetchAddresses() {
 }
 
 // Function to create address card HTML
-function createAddressCard(address) {
+function createUserAddressCard(user) {
     return `
-        <div class="address-card" data-address-id="${address.id}" onclick="focusOnMarker(${address.id})">
-            <div class="address-name">${address.name}</div>
-            <div class="address-text">${address.address}</div>
-            <div class="address-description">${address.description}</div>
+        <div class="address-card" data-address-id="${user.id}" onclick="focusOnMarker('${user.id}')">
+            <div class="address-name">${user.name}</div>
+            <div class="address-text">${user.address.name}</div>
         </div>
     `;
 }
 
 // Function to display addresses in the sidebar
-function displayAddresses() {
+function displayUsersAddresses() {
     const container = document.getElementById('addresses-container');
     
-    if (addresses.length > 0) {
-        const addressesHTML = addresses.map(address => createAddressCard(address)).join('');
-        container.innerHTML = addressesHTML;
+    if (users.length > 0) {
+        const usersAddressesHTML = users.map(user => createUserAddressCard(user)).join('');
+        container.innerHTML = usersAddressesHTML;
     } else {
-        showError('No addresses available');
+        showError('No users addresses available');
     }
 }
 
 // Function to add markers to the map
 function addMarkersToMap() {
-    // Clear existing markers
     markers.forEach(marker => marker.setMap(null));
     markers = [];
+    infoWindows = [];
     
-    addresses.forEach(address => {
+    users.forEach(user => {
         const marker = new google.maps.Marker({
-            position: { lat: address.lat, lng: address.lng },
+            position: { lat: user.address.lat, lng: user.address.lng },
             map: map,
-            title: address.name,
+            title: user.address.name,
             animation: google.maps.Animation.DROP
         });
         
-        // Create info window content
         const infoWindow = new google.maps.InfoWindow({
             content: `
                 <div style="padding: 10px; max-width: 200px;">
-                    <h4 style="margin: 0 0 5px 0; color: #2c3e50;">${address.name}</h4>
-                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">${address.address}</p>
-                    <p style="margin: 0; color: #888; font-size: 11px; font-style: italic;">${address.description}</p>
+                    <h4 style="margin: 0 0 5px 0; color: #2c3e50;">${user.address.name}</h4>
                 </div>
             `
         });
         
-        // Add click listener to marker
         marker.addListener('click', function() {
+            infoWindows.forEach(window => window.close());
             infoWindow.open(map, marker);
-            highlightAddressCard(address.id);
+            highlightUserAddressCard(user.id);
         });
         
-        // Store marker reference
+        // Store marker and info window references
         markers.push(marker);
+        infoWindows.push(infoWindow);
     });
     
-    // Fit map to show all markers
     if (markers.length > 0) {
         const bounds = new google.maps.LatLngBounds();
         markers.forEach(marker => bounds.extend(marker.getPosition()));
         map.fitBounds(bounds);
         
-        // If only one marker, zoom in a bit more
         if (markers.length === 1) {
             map.setZoom(12);
         }
@@ -133,36 +125,31 @@ function addMarkersToMap() {
 
 // Function to focus on a specific marker
 function focusOnMarker(addressId) {
-    const address = addresses.find(addr => addr.id === addressId);
-    if (address) {
-        const marker = markers.find(m => 
-            m.getPosition().lat() === address.lat && 
-            m.getPosition().lng() === address.lng
-        );
+    const user = users.find(user => user.id === addressId);
+    if (user) {
+        const markerIndex = users.findIndex(u => u.id === addressId);
+        const marker = markers[markerIndex];
+        const infoWindow = infoWindows[markerIndex];
         
-        if (marker) {
-            // Center map on marker
+        if (marker && infoWindow) {
             map.setCenter(marker.getPosition());
             map.setZoom(14);
             
-            // Trigger marker click to show info window
-            google.maps.event.trigger(marker, 'click');
+            infoWindows.forEach(window => window.close());
+            infoWindow.open(map, marker);
             
-            // Highlight the address card
-            highlightAddressCard(addressId);
+            highlightUserAddressCard(addressId);
         }
     }
 }
 
 // Function to highlight address card
-function highlightAddressCard(addressId) {
-    // Remove active class from all cards
+function highlightUserAddressCard(userId) {
     document.querySelectorAll('.address-card').forEach(card => {
         card.classList.remove('active');
     });
     
-    // Add active class to selected card
-    const selectedCard = document.querySelector(`[data-address-id="${addressId}"]`);
+    const selectedCard = document.querySelector(`[data-address-id="${userId}"]`);
     if (selectedCard) {
         selectedCard.classList.add('active');
         selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -196,7 +183,6 @@ function loadGoogleMapsAPI() {
                 const data = JSON.parse(xhr.responseText);
                 const apiKey = data.apiKey;
                 
-                // Load Google Maps API with the retrieved key
                 const script = document.createElement('script');
                 script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
                 script.async = true;
