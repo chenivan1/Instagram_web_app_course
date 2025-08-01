@@ -55,11 +55,6 @@ body {
     margin-left: 10px;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 .news-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -104,9 +99,6 @@ body {
     color: #666;
     line-height: 1.6;
     margin-bottom: 15px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
@@ -134,7 +126,7 @@ body {
 }
 
 .read-more:hover {
-    color: #2980b9;
+    color: #0e3f5f;
 }
 
 .error {
@@ -158,14 +150,3 @@ body {
 .error button:hover {
     background: #2980b9;
 }
-
-@media (max-width: 768px) {
-    .news-grid {
-        grid-template-columns: 1fr;
-        padding: 20px;
-    }
-    
-    .header h1 {
-        font-size: 2rem;
-    }
-} 
