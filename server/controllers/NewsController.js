@@ -2,7 +2,7 @@ const axios = require('axios');
 const path = require('path');
 
 const NewsController = {
-    async getNews(req, res) {
+    async getNews(_, res) {
         try {
             // Fetch news data from BBC RSS feed
             const response = await axios.get('https://api.rss2json.com/v1/api.json?rss_url=http://feeds.bbci.co.uk/news/world/rss.xml');
@@ -15,7 +15,7 @@ const NewsController = {
             res.status(500).json({ error: 'Failed to fetch news data' });
         }
     },
-    async renderNewsPage(req, res) {
+    async renderNewsPage(_, res) {
         try {
             // Send the HTML page
             res.sendFile(path.join(__dirname, '../views/news/news.html'));
