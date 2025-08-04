@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const SessionManager = require('../sessionManager');
+const path = require('path');
 
 const UserController = {
   async getAllUsers(_, res) {
@@ -61,6 +62,7 @@ const UserController = {
         name: full_name,
         email: email,
         password: password,
+        isAdmin: false, // New users are not admins by default
         address: {
           name: address.name,
           lat: address.latitude,
@@ -118,6 +120,137 @@ const UserController = {
       message: 'Logout successful', 
       success: true 
     });
+  },
+  // User Management methods
+  async getUserManagementPage(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser || !currentUser.isAdmin) {
+      return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
+    }
+    
+    res.sendFile(path.join(__dirname, '../views/user-management/user-management.html'));
+  },
+  async searchUsers(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser || !currentUser.isAdmin) {
+      return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
+    }
+    
+    const { query } = req.query;
+    
+    try {
+      const users = await User.find();
+      let filteredUsers = users;
+      
+      if (query && query.trim()) {
+        const searchTerm = query.toLowerCase().trim();
+        filteredUsers = users.filter(user => 
+          user.name.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Return users without passwords
+      const usersWithoutPasswords = filteredUsers.map(user => {
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+      });
+      
+      res.json(usersWithoutPasswords);
+    } catch (error) {
+      console.error('Search users error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+  async deleteUserById(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser || !currentUser.isAdmin) {
+      return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
+    }
+    
+    const { id } = req.params;
+    
+    // Prevent admin from deleting themselves
+    if (id === currentUser.id) {
+      return res.status(400).json({ error: 'Cannot delete your own account' });
+    }
+    
+    try {
+      // Check if target user is admin before deletion
+      const targetUser = await User.findById(id);
+      if (targetUser && targetUser.isAdmin) {
+        return res.status(400).json({ error: 'Cannot delete admin users' });
+      }
+    } catch (error) {
+      console.error('Error checking target user:', error);
+    }
+    
+    try {
+      const deletedUser = await User.delete(id);
+      if (!deletedUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      res.json({ message: 'User deleted successfully', user: deletedUser });
+    } catch (error) {
+      console.error('Delete user error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+  async toggleUserRole(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser || !currentUser.isAdmin) {
+      return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
+    }
+    
+    const { id } = req.params;
+    
+    try {
+      const targetUser = await User.findById(id);
+      if (!targetUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      // Prevent admins from changing other admin users' roles
+      if (targetUser.isAdmin) {
+        return res.status(400).json({ error: 'Cannot modify admin user roles' });
+      }
+      
+      // Toggle the admin status
+      const updatedUser = await User.update(id, { isAdmin: !targetUser.isAdmin });
+      
+      if (!updatedUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      const action = updatedUser.isAdmin ? 'promoted to admin' : 'removed from admin';
+      res.json({ message: `User ${action} successfully`, user: updatedUser });
+    } catch (error) {
+      console.error('Toggle user role error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+  async getCurrentUser(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser) {
+      return res.status(401).json({ error: 'No user logged in' });
+    }
+    
+    try {
+      // Return user data without password
+      const { password, ...userWithoutPassword } = currentUser;
+      res.json({ 
+        user: userWithoutPassword,
+        success: true 
+      });
+    } catch (error) {
+      console.error('Get current user error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 };
 
