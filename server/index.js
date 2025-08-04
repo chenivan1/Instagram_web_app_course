@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
 const userRoutes = require('./routes/userRoutes');
 const newsRoutes = require('./routes/newsRoutes');
 const addressesRoutes = require('./routes/addressesRoutes');
+const authMiddleware = require('./middleware/authMiddleware');
 const path = require('path');
 
 app.use(express.json());
@@ -26,12 +27,16 @@ app.get('/api/maps-key', (req, res) => {
 });
 
 // Serve HTML views
-app.get('/login', (req, res) => {
+app.get('/login', authMiddleware.redirectIfAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'login', 'login.html'));
 });
 
-app.get('/register', (req, res) => {
+app.get('/register', authMiddleware.redirectIfAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'register', 'registration.html'));
+});
+
+app.get('/home', authMiddleware.requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'home', 'home.html'));
 });
 
 app.get('/news', (req, res) => {
@@ -42,8 +47,13 @@ app.get('/addresses', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'addresses', 'addresses.html'));
 });
 
-app.get('/', (_, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'login', 'login.html'));
+app.get('/', (req, res) => {
+  const SessionManager = require('./sessionManager');
+  if (SessionManager.isUserLoggedIn()) {
+    res.redirect('/home');
+  } else {
+    res.redirect('/login');
+  }
 });
 
 app.listen(PORT, () => {

@@ -40,7 +40,7 @@ form_listener.addEventListener('submit', function(e) {
                         showMessage('Login successful! Redirecting...', false)
                         // Redirect to home page after a short delay
                         setTimeout(() => {
-                            window.location.href = "HomePage.html"
+                            window.location.href = "/home"
                         }, 1500)
                     } else {
                         // Login failed

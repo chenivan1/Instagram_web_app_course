@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>instagram</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/home/home.css">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -12,7 +12,7 @@
       crossorigin="anonymous"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.9/purify.min.js"></script>
-    <script defer src="./HomePage.js"></script>
+    <script defer src="assets/home/home.js"></script>
 </head>
 <button id="scrollToTopBtn" title="Go to top">↑</button><!--the button to scroll to the top of the page-->
 <body>
@@ -28,16 +28,16 @@
         -->
         <div class="d-flex justify-content-between align-items-start flex-lg-row flex-column">
             <div class="col-lg-2 col-md-3 col-sm-4 sidebar-container">
-                <img src="IMG/instagram.png" class="instagram">
+                <img src="assets/recources/instagram.png" class="instagram">
                 <div class="sidebar_btns">
                     <button id="themeToggleBtn" class="btn btn-outline-dark mt-3"> mode </button><!--button to switch to dark/light mode-->
-                    <button class="sidebar_btn" type="button"><img src="IMG/home.png" class="sidebar_icons"> Home</button>
-                    <button id="search-button" class="sidebar_btn" type="button"><img src="IMG/search-removebg.png" class="sidebar_icons"> Search</button>
-                    <button class="sidebar_btn" type="button"><img src="IMG/explore.png" class="sidebar_icons"> Explore</button>
-                    <button class="sidebar_btn" type="button"><img src="IMG/reels.png" class="sidebar_icons"> Reels</button>
-                    <button class="sidebar_btn" type="button"><img src="IMG/messages-removebg.png" class="sidebar_icons"> Messages</button>
-                    <button class="sidebar_btn" type="button"><img src="IMG/notifications.png" class="sidebar_icons" style="height: 30px; width: 35px;" >Notifications</button>
-                    <button id="create-post-btn" class="sidebar_btn" type="button"><img src="IMG/create.png" class="sidebar_icons"> Create</button>
+                    <button class="sidebar_btn" type="button"><img src="assets/recources/home.png" class="sidebar_icons"> Home</button>
+                    <button id="search-button" class="sidebar_btn" type="button"><img src="assets/recources/search-removebg.png" class="sidebar_icons"> Search</button>
+                    <button class="sidebar_btn" type="button"><img src="assets/recources/explore.png" class="sidebar_icons"> Explore</button>
+                    <button class="sidebar_btn" type="button"><img src="assets/recources/reels.png" class="sidebar_icons"> Reels</button>
+                    <button class="sidebar_btn" type="button"><img src="assets/recources/messages-removebg.png" class="sidebar_icons"> Messages</button>
+                    <button class="sidebar_btn" type="button"><img src="assets/recources/notifications.png" class="sidebar_icons" style="height: 30px; width: 35px;" >Notifications</button>
+                    <button id="create-post-btn" class="sidebar_btn" type="button"><img src="assets/recources/create.png" class="sidebar_icons"> Create</button>
 
     <!-- Modal for creating a new post -->
     <div id="createPostModal" class="search-modal">
@@ -51,17 +51,17 @@
           </div>
           <div class="mb-3">
             <label for="postImage" class="form-label">Img link (optional)</label>
-            <input type="text" id="postImage" class="form-control" placeholder="IMG/puppy-post.jpg">
+            <input type="text" id="postImage" class="form-control" placeholder="assets/recources/puppy-post.jpg">
           </div>
           <button type="submit" class="btn btn-primary" id="publishPostBtn">Publish Post</button>
         </form>
       </div>
     </div>
-                    <button class="sidebar_btn" type="button"><img src="IMG/profile.png" class="sidebar_icons"> Profile</button>
+                    <button class="sidebar_btn" type="button"><img src="assets/recources/profile.png" class="sidebar_icons"> Profile</button>
                 </div>
                 <div class="more_btns">
-                    <button class="sidebar_btn" type="button"><img src="IMG/threads.png" class="sidebar_icons"> Threads</button>
-                    <button class="sidebar_btn" type="button"><img src="IMG/more.png" class="sidebar_icons"> More</button> 
+                    <button class="sidebar_btn" type="button"><img src="assets/recources/threads.png" class="sidebar_icons"> Threads</button>
+                    <button class="sidebar_btn" type="button"><img src="assets/recources/more.png" class="sidebar_icons"> More</button> 
                 </div>
             </div>
 
@@ -79,35 +79,35 @@
                  <!-- Stories Section -->
                 <div class="stories">
                     <div class="story">
-                        <img class="story-pic" src="IMG/chandler.jpg" alt="Story 1">
+                        <img class="story-pic" src="assets/recources/chandler.jpg" alt="Story 1">
                         <p class="story-username">chandler_bing</p>
                     </div>
                     <div class="story">
-                        <img class="story-pic" src="IMG/joey.jpg" alt="Story 2">
+                        <img class="story-pic" src="assets/recources/joey.jpg" alt="Story 2">
                         <p class="story-username">the_joey</p>
                     </div>                    
                     <div class="story">
-                        <img class="story-pic" src="IMG/story4.jpg" alt="Story 3">
+                        <img class="story-pic" src="assets/recources/story4.jpg" alt="Story 3">
                         <p class="story-username">Dr.geller</p>
                     </div>
                     <div class="story">
-                        <img class="story-pic" src="IMG/janice.jpg" alt="Story 4">
+                        <img class="story-pic" src="assets/recources/janice.jpg" alt="Story 4">
                         <p class="story-username">Janice</p>
                     </div>
                     <div class="story">
-                        <img class="story-pic" src="IMG/rachel.jpg" alt="Story 5">
+                        <img class="story-pic" src="assets/recources/rachel.jpg" alt="Story 5">
                         <p class="story-username">Rachel</p>
                     </div>
                     <div class="story">
-                        <img class="story-pic" src="IMG/phoebe.jpg" alt="Story 6">
+                        <img class="story-pic" src="assets/recources/phoebe.jpg" alt="Story 6">
                         <p class="story-username">Phoebe</p>
                     </div>
                     <div class="story">
-                        <img class="story-pic" src="IMG/estelle.jpg" alt="Story 7">
+                        <img class="story-pic" src="assets/recources/estelle.jpg" alt="Story 7">
                         <p class="story-username">Estelle_Talent</p>
                     </div>
                     <div class="story">
-                        <img class="story-pic" src="IMG/Mr.Heckles.jpg" alt="Story 8">
+                        <img class="story-pic" src="assets/recources/Mr.Heckles.jpg" alt="Story 8">
                         <p class="story-username">Mr.Heckles</p>
                     </div>
                 </div>          
@@ -115,7 +115,7 @@
                 <div class="posts mt-5">
                     <div class="single-post">
                     <div class="post-header">
-                        <img src="IMG/chandler.jpg" alt="chandler" class="profile-pic">
+                        <img src="assets/recources/chandler.jpg" alt="chandler" class="profile-pic">
                         <p class="post-username">chandler_bing
                             <span class="post_time">
                                 &#x2022; 3h
@@ -123,11 +123,11 @@
                         </p>
                         <button class="delete-post btn btn-sm btn-link text-muted p-0" title="Delete Post">🗑</button>
                     </div>
-                    <img src="IMG/chandlerPost.jpg" alt="Post Image" class="post-image">
+                    <img src="assets/recources/chandlerPost.jpg" alt="Post Image" class="post-image">
                     <div class="post-actions">
-                        <img src="IMG/notifications.png" alt="Like" class="like-btn" data-post-id="1">
-                        <img src="IMG/comment.png" alt="Comment">
-                        <img src="IMG/messages-removebg.png" alt="Share">
+                        <img src="assets/recources/notifications.png" alt="Like" class="like-btn" data-post-id="1">
+                        <img src="assets/recources/comment.png" alt="Comment">
+                        <img src="assets/recources/messages-removebg.png" alt="Share">
                     </div>
                     <div>
                     <!-- Likes count -->
@@ -163,7 +163,7 @@
 
                 <div class="single-post">
                     <div class="post-header">
-                        <img src="IMG/rachel.jpg" alt="rachel" class="profile-pic">
+                        <img src="assets/recources/rachel.jpg" alt="rachel" class="profile-pic">
                         <p class="post-username">Rachel
                             <span class="post_time">
                                 &#x2022; 4h
@@ -171,11 +171,11 @@
                         </p>
                         <button class="delete-post btn btn-sm btn-link text-muted p-0" title="Delete Post">🗑</button>
                     </div>
-                    <img src="IMG/puppy-post.jpg" alt="Post Image" class="post-image">
+                    <img src="assets/recources/puppy-post.jpg" alt="Post Image" class="post-image">
                     <div class="post-actions">
-                        <img src="IMG/notifications.png" alt="Like" class="like-btn" data-post-id="4">
-                        <img src="IMG/comment.png" alt="Comment">
-                        <img src="IMG/messages-removebg.png" alt="Share">
+                        <img src="assets/recources/notifications.png" alt="Like" class="like-btn" data-post-id="4">
+                        <img src="assets/recources/comment.png" alt="Comment">
+                        <img src="assets/recources/messages-removebg.png" alt="Share">
                     </div>
                     <div>
                     <!-- Likes count -->
@@ -211,7 +211,7 @@
 
                 <div class="single-post">
                 <div class="post-header">
-                        <img src="IMG/phoebe.jpg" alt="phoebe" class="profile-pic">
+                        <img src="assets/recources/phoebe.jpg" alt="phoebe" class="profile-pic">
                         <p class="post-username">phoebe
                             <span class="post_time">
                                 &#x2022; 4h
@@ -219,11 +219,11 @@
                         </p>
                         <button class="delete-post btn btn-sm btn-link text-muted p-0" title="Delete Post">🗑</button>
                     </div>
-                    <img src="IMG/phoebeplan.jpg" alt="Post Image" class="post-image">
+                    <img src="assets/recources/phoebeplan.jpg" alt="Post Image" class="post-image">
                     <div class="post-actions">
-                        <img src="IMG/notifications.png" alt="Like"  class="like-btn" data-post-id="2">
-                        <img src="IMG/comment.png" alt="Comment">
-                        <img src="IMG/messages-removebg.png" alt="Share">
+                        <img src="assets/recources/notifications.png" alt="Like"  class="like-btn" data-post-id="2">
+                        <img src="assets/recources/comment.png" alt="Comment">
+                        <img src="assets/recources/messages-removebg.png" alt="Share">
                     </div>
                     <div>
                     <!-- Likes count -->
@@ -259,7 +259,7 @@
 
         <div class="single-post">        
         <div class="post-header">
-            <img src="IMG/phoebe.jpg" alt="User1" class="profile-pic">
+            <img src="assets/recources/phoebe.jpg" alt="User1" class="profile-pic">
             <p class="post-username">Phoebe
                 <span class="post_time">
                     &#x2022; 4h
@@ -267,11 +267,11 @@
             </p>
             <button class="delete-post btn btn-sm btn-link text-muted p-0" title="Delete Post">🗑</button>
         </div>
-        <img src="IMG/post2.jpg" alt="Post Image" class="post-image">
+        <img src="assets/recources/post2.jpg" alt="Post Image" class="post-image">
         <div class="post-actions">
-            <img src="IMG/notifications.png" alt="Like" alt="Like"  class="like-btn" data-post-id="3">
-            <img src="IMG/comment.png" alt="Comment">
-            <img src="IMG/messages-removebg.png" alt="Share">
+            <img src="assets/recources/notifications.png" alt="Like" alt="Like"  class="like-btn" data-post-id="3">
+            <img src="assets/recources/comment.png" alt="Comment">
+            <img src="assets/recources/messages-removebg.png" alt="Share">
             </div>
             <!-- Likes count -->
                 <p id="likes-count-3" class="px-2 mb-1" style="font-size: 15px;"><strong>3,472 likes</strong></p>
@@ -312,7 +312,7 @@
             <div class="col-lg-3 d-none d-lg-block suggestion-container">
                 <!-- User Profile Top  -->
                 <div class="user-profile">
-                    <img src="IMG/user.jpg" alt="User Profile">
+                    <img src="assets/recources/user.jpg" alt="User Profile">
                     <div class="user-info">
                         <p class="username">Monica</p>
                         <p class="name">monica geller</p>
@@ -330,7 +330,7 @@
             
                     <!-- first suggested user -->
                     <div class="suggestion">
-                        <img src="IMG/richardBurke.jpg" alt="Suggested User">
+                        <img src="assets/recources/richardBurke.jpg" alt="Suggested User">
                         <div class="suggestion-info">
                             <p class="px-1 mb-1 username">Dr.Burke</p>
                             <p class="relation">Followed by Dr.geller + 12 more</p>
@@ -340,7 +340,7 @@
             
                     <!-- second suggested user -->
                     <div class="suggestion">
-                        <img src="IMG/gunther.jpg" alt="Suggested User">
+                        <img src="assets/recources/gunther.jpg" alt="Suggested User">
                         <div class="suggestion-info">
                             <p class="px-1 mb-1 username">the_gunther</p>
                             <p class="relation">Followed by Phoebe + 2 more</p>
@@ -350,7 +350,7 @@
                     
                     <!-- third suggested user -->
                     <div class="suggestion">
-                        <img src="IMG/mike.jpg" alt="Suggested User">
+                        <img src="assets/recources/mike.jpg" alt="Suggested User">
                         <div class="suggestion-info">
                             <p class="px-1 mb-1 username">mike_134</p>
                             <p class="relation">Followed by phoebe...</p>
@@ -360,7 +360,7 @@
             
                     <!-- fourth suggested user -->
                     <div class="suggestion">
-                        <img src="IMG/tag2.jpg" alt="Suggested User">
+                        <img src="assets/recources/tag2.jpg" alt="Suggested User">
                         <div class="suggestion-info">
                             <p class="px-1 mb-1 username">Tag_Jones</p>
                             <p class="relation">Followed by phoebe + 2 more</p>
@@ -370,7 +370,7 @@
             
                     <!-- fifth suggested user  blabla-->
                     <div class="suggestion">
-                        <img src="IMG/jess.jpg" alt="Suggested User">
+                        <img src="assets/recources/jess.jpg" alt="Suggested User">
                         <div class="suggestion-info">
                             <p class="px-1 mb-1 username">JessMariano</p>
                             <p class="relation">Followed by RoryGil + 7 more</p>
@@ -396,16 +396,16 @@
         <h5>Share this post</h5>
         <div class="share-options">
           <a href="#" class="share-icon" title="copy link">
-            <img src="IMG/copyLink.png" alt="link">
+            <img src="assets/recources/copyLink.png" alt="link">
           </a>
           <a href="#" class="share-icon" title="Share on WhatsApp">
-            <img src="IMG/whatsapp.png" alt="WhatsApp">
+            <img src="assets/recources/whatsapp.png" alt="WhatsApp">
           </a>
           <a href="#" class="share-icon" title="Share on Facebook">
-            <img src="IMG/facebook.png" alt="Facebook">
+            <img src="assets/recources/facebook.png" alt="Facebook">
           </a>
           <a href="#" class="share-icon" title="Share on Messenger">
-            <img src="IMG/messenger.png" alt="Messenger">
+            <img src="assets/recources/messenger.png" alt="Messenger">
           </a>
         </div>
       </div>

@@ -1,7 +1,5 @@
 const User = require('../models/User');
-
-// Simple in-memory session storage (in production, use proper session management)
-let loggedInUsers = new Set();
+const SessionManager = require('../sessionManager');
 
 const UserController = {
   async getAllUsers(_, res) {
@@ -101,8 +99,7 @@ const UserController = {
         return res.status(404).json({ error: 'User not found or invalid credentials' });
       }
       
-      // Add user to logged in users (simple session-like storage)
-      loggedInUsers.add(user.id);
+      SessionManager.setLoggedInUser(user);
       
       // Return user data without password
       const { password: _, ...userWithoutPassword } = user;
@@ -114,6 +111,13 @@ const UserController = {
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }
+  },
+  async logoutUser(req, res) {
+    SessionManager.logout();
+    res.json({ 
+      message: 'Logout successful', 
+      success: true 
+    });
   }
 };
 
