@@ -1,0 +1,25 @@
+body {
+  background-color: #fafafa;
+}
+
+.logo {
+  width: 60%;
+  max-width: 200px;
+}
+
+
+h1{
+border-radius: 0%;
+
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.store-badge {
+  width: 120px;
+  height: auto;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instagram Login</title>
+  <link rel="loginStyle" href="loginStyle.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+  <div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="row justify-content-center w-100">
+      <!-- Login Form Section -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card p-4 shadow-sm text-center">
+          <img src="IMG/instagram.png" class="img-fluid mb-3 logo" alt="Instagram Logo" />
+          <form id="form_login">
+            <div class="mb-3">
+              <input id="username" type="text" class="form-control" placeholder="Phone number, username, or email" required />
+            </div>
+            <div class="mb-3">
+              <input id="password" type="password" class="form-control" placeholder="Password" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Log In</button>
+            <div class="d-flex justify-content-center align-items-center my-3">
+              <hr class="flex-grow-1 me-2" />
+              <span class="text-muted">OR</span>
+              <hr class="flex-grow-1 ms-2" />
+            </div>
+            <a href="#" class="text-primary text-decoration-none d-block mb-2">Log in with Facebook</a>
+            <a href="#" class="text-muted text-decoration-none" style="font-size: 12px;">Forgot password?</a>
+          </form>
+        </div>
+        
+        <!-- Sign Up Prompt -->
+        <div class="card mt-3 text-center p-3">
+          <p class="mb-0">Don't have an account? <a href="#" class="text-primary text-decoration-none">Sign up</a></p>
+        </div>
+
+        <!-- Get the app section -->
+        <div class="text-center mt-4">
+          <p>Get the app.</p>
+          <div class="d-flex justify-content-center gap-2">
+            <img src="IMG/playstore.png" class="store-badge" alt="Play Store" style="height: 50px;" />
+            <img src="IMG/appStoreIcon.png" class="store-badge" alt="App Store" style="height: 50px;" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>
