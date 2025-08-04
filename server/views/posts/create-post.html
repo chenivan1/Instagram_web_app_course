@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post - Instagram Web App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/posts/create-post.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Create New Post</h2>
+                    <a href="/home" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+
+                <!-- Create Post Form -->
+                <div class="card create-post-card">
+                    <div class="card-body">
+                        <form id="createPostForm">
+                            <!-- Community Selection -->
+                            <div class="mb-4">
+                                <label for="communitySelect" class="form-label">Select Community *</label>
+                                <select class="form-select" id="communitySelect" required>
+                                    <option value="">Choose a community...</option>
+                                </select>
+                                <div class="form-text">You can only post to communities you're subscribed to</div>
+                                <div class="invalid-feedback" id="communityError"></div>
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div class="mb-4">
+                                <label for="imageInput" class="form-label">Upload Image *</label>
+                                <input type="file" class="form-control" id="imageInput" 
+                                       accept="image/jpeg,image/jpg,image/png,image/gif" required>
+                                <div class="form-text">JPG, PNG, or GIF format. Maximum 5MB.</div>
+                                <div class="invalid-feedback" id="imageError"></div>
+                                
+                                <!-- Image Preview -->
+                                <div id="imagePreview" class="mt-3" style="display: none;">
+                                    <div class="preview-container">
+                                        <img id="previewImage" class="preview-image" alt="Preview">
+                                        <button type="button" class="btn btn-sm btn-outline-danger remove-image" 
+                                                onclick="removeImage()">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Title (Optional) -->
+                            <div class="mb-4">
+                                <label for="postTitle" class="form-label">Title (Optional)</label>
+                                <input type="text" class="form-control" id="postTitle" 
+                                       placeholder="Add a title to your post..." maxlength="100">
+                                <div class="form-text">Maximum 100 characters</div>
+                                <div class="character-count">
+                                    <span id="titleCharCount">0</span>/100
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
+                                    <span class="button-text">Create Post</span>
+                                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Guidelines -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Posting Guidelines</h5>
+                        <ul class="mb-0">
+                            <li>You must be subscribed to a community to post in it</li>
+                            <li>Images must be under 5MB in size</li>
+                            <li>Supported formats: JPG, PNG, GIF</li>
+                            <li>Title is optional but can help describe your post</li>
+                            <li>Be respectful and follow community standards</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-4">
+                    <div class="success-icon mb-3">
+                        <svg width="60" height="60" fill="currentColor" class="text-success">
+                            <use xlink:href="#check-circle"/>
+                        </svg>
+                    </div>
+                    <h4 class="mb-2">Post Created Successfully!</h4>
+                    <p class="text-muted mb-4">Your post has been shared with the community.</p>
+                    <div class="d-grid gap-2">
+                        <a href="/home" class="btn btn-primary">View in Feed</a>
+                        <button type="button" class="btn btn-outline-secondary" onclick="createAnother()">
+                            Create Another Post
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SVG Icons -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+        </symbol>
+    </svg>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/posts/create-post.js"></script>
+</body>
+</html>
