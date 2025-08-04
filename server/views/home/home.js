@@ -1,3 +1,47 @@
+// Check if user is admin and show/hide admin features
+function checkAdminAccess() {
+  // For now, we'll use a simple method to check if current user is admin
+  // In a real app, this would come from the session or API call
+  
+  // Get the current user info from session storage or make an API call
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', '/user/current', true);
+  
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        try {
+          const response = JSON.parse(xhr.responseText);
+          if (response.user && response.user.isAdmin) {
+            const manageUsersBtn = document.getElementById('manage-users-btn');
+            if (manageUsersBtn) {
+              manageUsersBtn.style.display = 'block';
+            }
+          }
+        } catch (e) {
+          console.error('Error parsing admin check response:', e);
+        }
+      } else {
+        // If there's an error or user is not logged in, hide admin features
+        const manageUsersBtn = document.getElementById('manage-users-btn');
+        if (manageUsersBtn) {
+          manageUsersBtn.style.display = 'none';
+        }
+      }
+    }
+  };
+  
+  xhr.onerror = function() {
+    // If there's a network error, hide admin features
+    const manageUsersBtn = document.getElementById('manage-users-btn');
+    if (manageUsersBtn) {
+      manageUsersBtn.style.display = 'none';
+    }
+  };
+  
+  xhr.send();
+}
+
 // Add new post to feed from user input
 function addNewPostToFeed(caption, imageUrl) {
   const postsContainer = document.querySelector('.posts');
@@ -465,6 +509,11 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+
+// Initialize admin access check when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  checkAdminAccess();
+});
 
 // Helper function to escape HTML special characters (prevents HTML injection)
 function escapeHTML(str) {

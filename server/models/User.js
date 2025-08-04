@@ -8,6 +8,7 @@ let mockUsers = [{
   name: 'John Doe',
   email: 'john.doe@example.com',
   password: 'password',
+  isAdmin: true,
   address: {
     name: "123 Main Street, New York, NY 10001",
     lat: 40.7128,
@@ -19,10 +20,23 @@ let mockUsers = [{
   name: 'Jane Doe',
   email: 'jane.doe@example.com',
   password: 'password',
+  isAdmin: false,
   address: {
     name: "456 Oak Avenue, Los Angeles, CA 90210",
     lat: 34.0522,
     lng: -118.2437,
+  },
+  createdAt: new Date(),
+}, {
+  id: '3',
+  name: 'Admin User',
+  email: 'admin@example.com',
+  password: 'admin123',
+  isAdmin: true,
+  address: {
+    name: "789 Admin Street, Chicago, IL 60601",
+    lat: 41.8781,
+    lng: -87.6298,
   },
   createdAt: new Date(),
 }];
