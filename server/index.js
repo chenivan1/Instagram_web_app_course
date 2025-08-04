@@ -25,8 +25,21 @@ app.get('/api/maps-key', (req, res) => {
   res.json({ apiKey });
 });
 
+// Serve HTML views
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'login', 'login.html'));
+});
+
+app.get('/news', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'news', 'news.html'));
+});
+
+app.get('/addresses', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'addresses', 'addresses.html'));
+});
+
 app.get('/', (_, res) => {
-  res.send('Hello from Express server!');
+  res.sendFile(path.join(__dirname, 'views', 'login', 'login.html'));
 });
 
 app.listen(PORT, () => {
