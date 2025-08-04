@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>instagram</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.9/purify.min.js"></script>
+    <script defer src="./HomePage.js"></script>
+</head>
+<button id="scrollToTopBtn" title="Go to top">↑</button><!--the button to scroll to the top of the page-->
+<body>
+
+    <div class="container-fluid"> 
+        <!-- 
+         Explanation of Bootstrap utility classes used on the main layout wrapper:
+            d-flex                 - Applies Flexbox layout to the container.
+            justify-content-between - Distributes child elements horizontally with space between them.
+            align-items-start      - Aligns child elements to the top (start) of the cross axis (vertical).
+            flex-lg-row            - From large screens (≥992px) and up, layout children in a horizontal row.
+            flex-column            - For small and medium screens, layout children vertically (stacked).
+        -->
+        <div class="d-flex justify-content-between align-items-start flex-lg-row flex-column">
+            <div class="col-lg-2 col-md-3 col-sm-4 sidebar-container">
+                <img src="IMG/instagram.png" class="instagram">
+                <div class="sidebar_btns">
+                    <button id="themeToggleBtn" class="btn btn-outline-dark mt-3"> mode </button><!--button to switch to dark/light mode-->
+                    <button class="sidebar_btn" type="button"><img src="IMG/home.png" class="sidebar_icons"> Home</button>
+                    <button id="search-button" class="sidebar_btn" type="button"><img src="IMG/search-removebg.png" class="sidebar_icons"> Search</button>
+                    <button class="sidebar_btn" type="button"><img src="IMG/explore.png" class="sidebar_icons"> Explore</button>
+                    <button class="sidebar_btn" type="button"><img src="IMG/reels.png" class="sidebar_icons"> Reels</button>
+                    <button class="sidebar_btn" type="button"><img src="IMG/messages-removebg.png" class="sidebar_icons"> Messages</button>
+                    <button class="sidebar_btn" type="button"><img src="IMG/notifications.png" class="sidebar_icons" style="height: 30px; width: 35px;" >Notifications</button>
+                    <button id="create-post-btn" class="sidebar_btn" type="button"><img src="IMG/create.png" class="sidebar_icons"> Create</button>
+
+    <!-- Modal for creating a new post -->
+    <div id="createPostModal" class="search-modal">
+      <div class="search-modal-content">
+        <span class="search-close-btn" id="createPostCloseBtn">&times;</span>
+        <h5>Create new post</h5>
+        <form id="createPostForm">
+          <div class="mb-3">
+            <label for="postCaption" class="form-label">post text:</label>
+            <input type="text" id="postCaption" class="form-control" placeholder="What's new?" required maxlength="200">
+          </div>
+          <div class="mb-3">
+            <label for="postImage" class="form-label">Img link (optional)</label>
+            <input type="text" id="postImage" class="form-control" placeholder="IMG/puppy-post.jpg">
+          </div>
+          <button type="submit" class="btn btn-primary" id="publishPostBtn">Publish Post</button>
+        </form>
+      </div>
+    </div>
+                    <button class="sidebar_btn" type="button"><img src="IMG/profile.png" class="sidebar_icons"> Profile</button>
+                </div>
+                <div class="more_btns">
+                    <button class="sidebar_btn" type="button"><img src="IMG/threads.png" class="sidebar_icons"> Threads</button>
+                    <button class="sidebar_btn" type="button"><img src="IMG/more.png" class="sidebar_icons"> More</button> 
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-8 feed-container">
+                <!-- Filter dropdown above feed -->
+                <div class="mb-3 d-flex align-items-center gap-2">
+                  <label for="postTypeFilter" class="form-label mb-0">Filter posts by:</label>
+                  <select id="postTypeFilter" class="form-select w-auto">
+                    <option value="all">All</option>
+                    <option value="image">Images</option>
+                    <option value="text">Text Only</option>
+                    <option value="video">Videos</option>
+                  </select>
+                </div>
+                 <!-- Stories Section -->
+                <div class="stories">
+                    <div class="story">
+                        <img class="story-pic" src="IMG/chandler.jpg" alt="Story 1">
+                        <p class="story-username">chandler_bing</p>
+                    </div>
+                    <div class="story">
+                        <img class="story-pic" src="IMG/joey.jpg" alt="Story 2">
+                        <p class="story-username">the_joey</p>
+                    </div>                    
+                    <div class="story">
+                        <img class="story-pic" src="IMG/story4.jpg" alt="Story 3">
+                        <p class="story-username">Dr.geller</p>
+                    </div>
+                    <div class="story">
+                        <img class="story-pic" src="IMG/janice.jpg" alt="Story 4">
+                        <p class="story-username">Janice</p>
+                    </div>
+                    <div class="story">
+                        <img class="story-pic" src="IMG/rachel.jpg" alt="Story 5">
+                        <p class="story-username">Rachel</p>
+                    </div>
+                    <div class="story">
+                        <img class="story-pic" src="IMG/phoebe.jpg" alt="Story 6">
+                        <p class="story-username">Phoebe</p>
+                    </div>
+                    <div class="story">
+                        <img class="story-pic" src="IMG/estelle.jpg" alt="Story 7">
+                        <p class="story-username">Estelle_Talent</p>
+                    </div>
+                    <div class="story">
+                        <img class="story-pic" src="IMG/Mr.Heckles.jpg" alt="Story 8">
+                        <p class="story-username">Mr.Heckles</p>
+                    </div>
+                </div>          
+                <!-- Posts Section -->
+                <div class="posts mt-5">
+                    <div class="single-post">
+                    <div class="post-header">
+                        <img src="IMG/chandler.jpg" alt="chandler" class="profile-pic">
+                        <p class="post-username">chandler_bing
+                            <span class="post_time">
+                                &#x2022; 3h
+                            </span>
+                        </p>
+                        <button class="delete-post btn btn-sm btn-link text-muted p-0" title="Delete Post">🗑</button>
+                    </div>
+                    <img src="IMG/chandlerPost.jpg" alt="Post Image" class="post-image">
+                    <div class="post-actions">
+                        <img src="IMG/notifications.png" alt="Like" class="like-btn" data-post-id="1">
+                        <img src="IMG/comment.png" alt="Comment">
+                        <img src="IMG/messages-removebg.png" alt="Share">
+                    </div>
+                    <div>
+                    <!-- Likes count -->
+                        <p id="likes-count-1" class="px-2 mb-1" style="font-size: 15px;"><strong>1,643 likes</strong></p>
+                    <!-- Caption -->
+                        <p class="px-2 mb-1" style="font-size: 14px;"><strong>Janice</strong>  OH-MY-GOD CHANDLERR</p>
+                    <!-- See translation -->
+                        <div class="px-2 mb-1">
+                            <button type="button" class="btn btn-link text-decoration-none fw-semibold text-dark p-0" style="font-size: 13px;">See translation</button>
+                        </div>
+                    <!-- View all comments -->
+                        <div class="px-2 mb-1">
+                            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 view-comments-btn" style="font-size: 15px;">View all 2 comments</button>
+                        </div>
+                    <!-- Add a comment prompt -->
+                        <div class="px-2 mb-2 add-comment-section">
+                            <div class="comments-list" style="display:none;">
+                                <!-- Example pre-existing comments -->
+                                <div class="single-comment"><strong>ross_geller</strong> FUN FACT:the duck is a descendant of the Tyrannosaurus Rex</div>
+                                <div class="single-comment"><strong>rachel_green</strong> Ross nobody cares</div>
+                            </div>
+                            <!-- Add a comment button and form -->
+                            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 add-comment-btn" style="font-size: 14px;">
+                              Add a comment…
+                            </button>
+                            <form class="add-comment-form" style="display:none; margin-top:5px;">
+                                <input type="text" class="form-control form-control-sm comment-input" placeholder="Add a comment..." maxlength="200" required>
+                                <button type="submit" class="btn btn-primary btn-sm mt-1">Post</button>
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+
+                <div class="single-post">
+                    <div class="post-header">
+                        <img src="IMG/rachel.jpg" alt="rachel" class="profile-pic">
+                        <p class="post-username">Rachel
+                            <span class="post_time">
+                                &#x2022; 4h
+                            </span>
+                        </p>
+                        <button class="delete-post btn btn-sm btn-link text-muted p-0" title="Delete Post">🗑</button>
+                    </div>
+                    <img src="IMG/puppy-post.jpg" alt="Post Image" class="post-image">
+                    <div class="post-actions">
+                        <img src="IMG/notifications.png" alt="Like" class="like-btn" data-post-id="4">
+                        <img src="IMG/comment.png" alt="Comment">
+                        <img src="IMG/messages-removebg.png" alt="Share">
+                    </div>
+                    <div>
+                    <!-- Likes count -->
+                        <p id="likes-count-4" class="px-2 mb-1" style="font-size: 15px;"><strong>479 likes</strong></p>
+                    <!-- Caption -->
+                        <p class="px-2 mb-1" style="font-size: 14px;"><strong>Janice</strong>  SO CUTE IM GONNA DIEEEE</p>
+                    <!-- See translation -->
+                        <div class="px-2 mb-1">
+                            <button type="button" class="btn btn-link text-decoration-none fw-semibold text-dark p-0" style="font-size: 13px;">See translation</button>
+                        </div>
+                    <!-- View all comments -->
+                        <div class="px-2 mb-1">
+                            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 view-comments-btn" style="font-size: 15px;">View all 1 comments</button>
+                        </div>
+                    <!-- Add a comment prompt -->
+                        <div class="px-2 mb-2 add-comment-section">
+                            <div class="comments-list" style="display:none;">
+                                <!-- Example pre-existing comments -->
+                                <div class="single-comment"><strong>Monica</strong> Rachel I am not cleaning after that dog!!</div>
+                            </div>
+                            <!-- Add a comment button and form -->
+                            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 add-comment-btn" style="font-size: 14px;">
+                              Add a comment…
+                            </button>
+                            <form class="add-comment-form" style="display:none; margin-top:5px;">
+                                <input type="text" class="form-control form-control-sm comment-input" placeholder="Add a comment..." maxlength="200" required>
+                                <button type="submit" class="btn btn-primary btn-sm mt-1">Post</button>
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+
+
+                <div class="single-post">
+                <div class="post-header">
+                        <img src="IMG/phoebe.jpg" alt="phoebe" class="profile-pic">
+                        <p class="post-username">phoebe
+                            <span class="post_time">
+                                &#x2022; 4h
+                            </span>
+                        </p>
+                        <button class="delete-post btn btn-sm btn-link text-muted p-0" title="Delete Post">🗑</button>
+                    </div>
+                    <img src="IMG/phoebeplan.jpg" alt="Post Image" class="post-image">
+                    <div class="post-actions">
+                        <img src="IMG/notifications.png" alt="Like"  class="like-btn" data-post-id="2">
+                        <img src="IMG/comment.png" alt="Comment">
+                        <img src="IMG/messages-removebg.png" alt="Share">
+                    </div>
+                    <div>
+                    <!-- Likes count -->
+                        <p id="likes-count-2" class="px-2 mb-1" style="font-size: 15px;"><strong>11,352 likes</strong></p>
+                    <!-- Caption -->
+                        <p class="px-2 mb-1" style="font-size: 14px;"><strong>phoebe</strong>  I Dont Even Have A PLA</p>
+                    <!-- See translation -->
+                        <div class="px-2 mb-1">
+                            <button type="button" class="btn btn-link text-decoration-none fw-semibold text-dark p-0" style="font-size: 13px;">See translation</button>
+                        </div>
+                    <!-- View all comments -->
+                        <div class="px-2 mb-1">
+                            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 view-comments-btn" style="font-size: 15px;">View all 2 comments</button>
+                        </div>
+                    <!-- Add a comment -->
+                        <div class="px-2 mb-2 add-comment-section">
+                            <div class="comments-list" style="display:none;">
+                                <!-- Example pre-existing comments -->
+                                <div class="single-comment"><strong>chandler_bing </strong>this is going to be a very long year</div>
+                                <div class="single-comment"><strong>rachel_green</strong> mood </div>
+                            </div>
+                            <!-- Add a comment button and form -->
+                            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 add-comment-btn" style="font-size: 14px;">
+                              Add a comment…
+                            </button>
+                            <form class="add-comment-form" style="display:none; margin-top:5px;">
+                                <input type="text" class="form-control form-control-sm comment-input" placeholder="Add a comment..." maxlength="200" required>
+                                <button type="submit" class="btn btn-primary btn-sm mt-1">Post</button>
+                            </form>
+                        </div>                
+                    </div>
+                </div> 
+
+        <div class="single-post">        
+        <div class="post-header">
+            <img src="IMG/phoebe.jpg" alt="User1" class="profile-pic">
+            <p class="post-username">Phoebe
+                <span class="post_time">
+                    &#x2022; 4h
+                </span>
+            </p>
+            <button class="delete-post btn btn-sm btn-link text-muted p-0" title="Delete Post">🗑</button>
+        </div>
+        <img src="IMG/post2.jpg" alt="Post Image" class="post-image">
+        <div class="post-actions">
+            <img src="IMG/notifications.png" alt="Like" alt="Like"  class="like-btn" data-post-id="3">
+            <img src="IMG/comment.png" alt="Comment">
+            <img src="IMG/messages-removebg.png" alt="Share">
+            </div>
+            <!-- Likes count -->
+                <p id="likes-count-3" class="px-2 mb-1" style="font-size: 15px;"><strong>3,472 likes</strong></p>
+            <!-- Caption -->
+                <p class="px-2 mb-1" style="font-size: 14px;"><strong>joey</strong> so cute phoebs </p>
+            <!-- See translation -->
+                <div class="px-2 mb-1">
+                <button type="button" class="btn btn-link text-decoration-none fw-semibold text-dark p-0" style="font-size: 13px;">See translation</button>
+                </div>
+            <!-- View all comments -->
+                <div class="px-2 mb-1">
+                    <button type="button" class="btn btn-link text-muted text-decoration-none p-0 view-comments-btn" style="font-size: 15px;">View all 2 comments</button>
+                </div>
+            <!-- Add a comment prompt -->
+                <div class="px-2 mb-2 add-comment-section">
+                    <div class="comments-list" style="display:none;">
+                        <!-- Example pre-existing comments -->
+                        <div class="single-comment"><strong>mike</strong> please tell me you did not adopt him!</div>
+                        <div class="single-comment"><strong>Estelle_Talent</strong> Im gonna make him into a star</div>
+                    </div>
+                    <!-- Add a comment button and form -->
+                    <button type="button" class="btn btn-link text-muted text-decoration-none p-0 add-comment-btn" style="font-size: 14px;">
+                      Add a comment…
+                    </button>
+                    <form class="add-comment-form" style="display:none; margin-top:5px;">
+                        <input type="text" class="form-control form-control-sm comment-input" placeholder="Add a comment..." maxlength="200" required>
+                        <button type="submit" class="btn btn-primary btn-sm mt-1">Post</button>
+                    </form>
+                </div>
+        </div>
+        </div>
+
+        <!-- suggestion container -->
+            </div>
+             <!--
+                d-none with d-lg-block - dosent show the element at all on small and medium screens. Shows it as a block only on large screens and above.
+             -->
+            <div class="col-lg-3 d-none d-lg-block suggestion-container">
+                <!-- User Profile Top  -->
+                <div class="user-profile">
+                    <img src="IMG/user.jpg" alt="User Profile">
+                    <div class="user-info">
+                        <p class="username">Monica</p>
+                        <p class="name">monica geller</p>
+                    </div>
+                    <a href="#" class="switch">Switch</a>
+                </div>
+            
+                <!-- Suggested for you Section -->
+                <div class="suggestions-header">
+                    <p class="suggested-for-you">Suggested for you</p>
+                    <a href="#" class="see-all">See All</a>
+                </div>
+            
+                <div class="suggestions-list">
+            
+                    <!-- first suggested user -->
+                    <div class="suggestion">
+                        <img src="IMG/richardBurke.jpg" alt="Suggested User">
+                        <div class="suggestion-info">
+                            <p class="px-1 mb-1 username">Dr.Burke</p>
+                            <p class="relation">Followed by Dr.geller + 12 more</p>
+                        </div>
+                        <a href="#" class="px-1 mb-1 follow-btn">Follow</a>
+                    </div>
+            
+                    <!-- second suggested user -->
+                    <div class="suggestion">
+                        <img src="IMG/gunther.jpg" alt="Suggested User">
+                        <div class="suggestion-info">
+                            <p class="px-1 mb-1 username">the_gunther</p>
+                            <p class="relation">Followed by Phoebe + 2 more</p>
+                        </div>
+                        <a href="#" class="follow-btn">Follow</a>
+                    </div>
+                    
+                    <!-- third suggested user -->
+                    <div class="suggestion">
+                        <img src="IMG/mike.jpg" alt="Suggested User">
+                        <div class="suggestion-info">
+                            <p class="px-1 mb-1 username">mike_134</p>
+                            <p class="relation">Followed by phoebe...</p>
+                        </div>
+                        <a href="#" class="follow-btn">Follow</a>
+                    </div>
+            
+                    <!-- fourth suggested user -->
+                    <div class="suggestion">
+                        <img src="IMG/tag2.jpg" alt="Suggested User">
+                        <div class="suggestion-info">
+                            <p class="px-1 mb-1 username">Tag_Jones</p>
+                            <p class="relation">Followed by phoebe + 2 more</p>
+                        </div>
+                        <a href="#" class="follow-btn">Follow</a>
+                    </div>
+            
+                    <!-- fifth suggested user  blabla-->
+                    <div class="suggestion">
+                        <img src="IMG/jess.jpg" alt="Suggested User">
+                        <div class="suggestion-info">
+                            <p class="px-1 mb-1 username">JessMariano</p>
+                            <p class="relation">Followed by RoryGil + 7 more</p>
+                        </div>
+                        <a href="#" class="follow-btn">Follow</a>
+                    </div>
+                </div>
+                <!-- Footer Links -->
+                <div class="footer">
+                    <p>About · Help · Press · API · Jobs · Privacy · Terms · Locations · Language · Meta Verified</p>
+                    <p>© 2025 INSTAGRAM FROM META</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>  
+
+
+    <!-- Share pop up : Hidden by default, shown when Share button is clicked -->
+    <div id="shareModal" class="share-modal">
+      <div class="share-modal-content">
+        <span class="close-btn">&times;</span>
+        <h5>Share this post</h5>
+        <div class="share-options">
+          <a href="#" class="share-icon" title="copy link">
+            <img src="IMG/copyLink.png" alt="link">
+          </a>
+          <a href="#" class="share-icon" title="Share on WhatsApp">
+            <img src="IMG/whatsapp.png" alt="WhatsApp">
+          </a>
+          <a href="#" class="share-icon" title="Share on Facebook">
+            <img src="IMG/facebook.png" alt="Facebook">
+          </a>
+          <a href="#" class="share-icon" title="Share on Messenger">
+            <img src="IMG/messenger.png" alt="Messenger">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search pop up : Hidden by default, shown when Search button is clicked -->
+    <div id="searchModal" class="search-modal">
+      <div class="search-modal-content">
+        <span class="search-close-btn">&times;</span>
+        <h5>Search</h5>
+        <div class="input-group mb-3">
+          <input type="text" id="searchInput" class="form-control" placeholder="Type to search...">
+          <button id="searchApplyBtn" class="btn btn-primary" type="button">חפש</button>
+          <button id="searchResetBtn" class="btn btn-secondary" type="button">איפוס</button>
+        </div>
+        <div id="searchResults"></div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+      crossorigin="anonymous"
+    ></script>
+</body>
+</html>
