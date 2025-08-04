@@ -1,3 +1,46 @@
+// Helper function to make XMLHttpRequests
+function makeRequest(method, url, data = null) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url, true);
+        
+        if (method === 'POST' || method === 'PUT' || method === 'DELETE') {
+            xhr.setRequestHeader('Content-Type', 'application/json');
+        }
+        
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        resolve(response);
+                    } catch (e) {
+                        resolve(xhr.responseText);
+                    }
+                } else {
+                    let errorResponse;
+                    try {
+                        errorResponse = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        errorResponse = { error: 'Request failed' };
+                    }
+                    reject({ status: xhr.status, response: errorResponse, xhr: xhr });
+                }
+            }
+        };
+        
+        xhr.onerror = function() {
+            reject({ status: 0, response: { error: 'Network error' }, xhr: xhr });
+        };
+        
+        if (data) {
+            xhr.send(JSON.stringify(data));
+        } else {
+            xhr.send();
+        }
+    });
+}
+
 // Function to format date
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -82,7 +125,26 @@ function showError(message) {
     `;
 }
 
+// Handle logout functionality
+function handleLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        makeRequest('POST', '/user/logout')
+            .then(function() {
+                window.location.href = '/login';
+            })
+            .catch(function() {
+                alert('Logout failed. Please try again.');
+            });
+    }
+}
+
 // Load news when page loads
 document.addEventListener('DOMContentLoaded', function() {
     fetchNews();
+    
+    // Attach logout button event listener
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
 }); 

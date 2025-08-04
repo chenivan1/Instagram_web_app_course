@@ -1,18 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instagram - BBC World News</title>
     <link rel="stylesheet" href="/assets/news/news.css">
 </head>
+
 <body>
+    <!-- Sidebar -->
+    <div class="col-lg-2 col-md-3 col-sm-4 sidebar-container">
+        <img src="/assets/recources/instagram.png" class="instagram">
+        <div class="sidebar_btns">
+            <button class="sidebar_btn" type="button" onclick="window.location.href='/home'">
+                <img src="/assets/recources/home.png" class="sidebar_icons"> Home
+            </button>
+            <button class="sidebar_btn" type="button" onclick="window.location.href='/news'">
+                <img src="/assets/recources/messages-removebg.png" class="sidebar_icons"> News
+            </button>
+            <button class="sidebar_btn" type="button" onclick="window.location.href='/addresses'">
+                <img src="/assets/recources/explore.png" class="sidebar_icons"> Addresses
+            </button>
+            <button class="sidebar_btn" type="button" onclick="window.location.href='/user/user-management'">
+                <img src="/assets/recources/profile.png" class="sidebar_icons"> Manage Users
+            </button>
+            <button id="logout-btn" class="sidebar_btn" type="button">
+                <img src="/assets/recources/logout.png" class="sidebar_icons"> Logout
+            </button>
+        </div>
+    </div>
     <div class="container">
         <div class="header">
             <h1>Global News</h1>
             <p>Latest world news from BBC</p>
         </div>
-        
+
         <div id="news-container">
             <div class="loading">Loading latest news...</div>
         </div>
@@ -20,4 +43,5 @@
 
     <script src="/assets/news/news.js"></script>
 </body>
-</html> 
+
+</html>

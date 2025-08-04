@@ -1,3 +1,5 @@
+@import url('../home/home.css');
+
 * {
     margin: 0;
     padding: 0;
@@ -10,6 +12,10 @@ body {
 
 .container-fluid {
     padding: 0;
+}
+
+.addresses-container {
+    margin-left: 16%;
 }
 
 .header {
