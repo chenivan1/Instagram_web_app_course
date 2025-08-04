@@ -1,3 +1,5 @@
+@import url('../home/home.css');
+
 * {
     margin: 0;
     padding: 0;
@@ -15,6 +17,7 @@ body {
     border-radius: 15px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    margin-left: 17%;
 }
 
 .header {
@@ -148,4 +151,8 @@ body {
 
 .error button:hover {
     background: #2980b9;
+}
+
+.sidebar-container {
+    margin-right: 20px;
 }
