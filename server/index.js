@@ -5,17 +5,28 @@ const PORT = process.env.PORT || 3000;
 const userRoutes = require('./routes/userRoutes');
 const newsRoutes = require('./routes/newsRoutes');
 const addressesRoutes = require('./routes/addressesRoutes');
+const communityRoutes = require('./routes/communityRoutes');
+const postRoutes = require('./routes/postRoutes');
+const feedRoutes = require('./routes/feedRoutes');
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
 const authMiddleware = require('./middleware/authMiddleware');
 const path = require('path');
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // Increased limit for base64 images
 
 // Serve static files from views directory for news assets
 app.use('/assets', express.static(path.join(__dirname, 'views')));
 
+// Existing routes
 app.use('/user', userRoutes);
 app.use('/news', newsRoutes);
 app.use('/addresses', addressesRoutes);
+
+// New community features routes
+app.use('/communities', communityRoutes);
+app.use('/posts', postRoutes);
+app.use('/feed', feedRoutes);
+app.use('/subscriptions', subscriptionRoutes);
 
 // Endpoint to get Google Maps API key
 app.get('/api/maps-key', (req, res) => {
@@ -45,6 +56,14 @@ app.get('/news', (req, res) => {
 
 app.get('/addresses', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'addresses', 'addresses.html'));
+});
+
+app.get('/communities-management', authMiddleware.requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'communities', 'communities.html'));
+});
+
+app.get('/posts-creation', authMiddleware.requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'posts', 'create-post.html'));
 });
 
 app.get('/', (req, res) => {
