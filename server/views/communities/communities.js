@@ -187,12 +187,6 @@ function getActionButtons(community, isSubscribed, isManaged) {
             <button class="btn btn-manage" onclick="editCommunityModal('${community.id}')">
                 Edit Community
             </button>
-            <button class="btn btn-outline-info btn-sm" onclick="viewSubscribers('${community.id}')">
-                View Subscribers
-            </button>
-            <button class="btn btn-outline-primary btn-sm" onclick="viewCommunityPosts('${community.id}')">
-                View Posts
-            </button>
         `;
     } else {
         if (isSubscribed) {
@@ -208,11 +202,6 @@ function getActionButtons(community, isSubscribed, isManaged) {
                 </button>
             `;
         }
-        buttons += `
-            <button class="btn btn-outline-primary btn-sm" onclick="viewCommunityPosts('${community.id}')">
-                View Posts
-            </button>
-        `;
     }
     
     return buttons;
