@@ -308,6 +308,344 @@ const PostController = {
       console.error('Get post error:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
+  },
+
+  // Toggle like on a post
+  async toggleLike(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const { id } = req.params;
+
+    try {
+      // Check if post exists and user has access to it
+      const post = await Post.findById(id);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+
+      // Check if user can view this post (same logic as getPostById)
+      const isAuthor = post.authorId === currentUser.id;
+      let hasAccess = isAuthor;
+
+      if (!hasAccess) {
+        const community = await Community.findById(post.communityId);
+        const isManager = community && community.managerId === currentUser.id;
+        
+        if (isManager) {
+          hasAccess = true;
+        } else {
+          const isSubscribed = await CommunitySubscription.findByUserAndCommunity(
+            currentUser.id, 
+            post.communityId
+          );
+          hasAccess = !!isSubscribed;
+        }
+      }
+
+      if (!hasAccess) {
+        return res.status(403).json({ error: 'You do not have access to this post' });
+      }
+
+      // Toggle like
+      const updatedPost = await Post.toggleLike(id, currentUser.id);
+      if (!updatedPost) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+
+      // Check if user liked or unliked
+      const isLiked = updatedPost.likes && updatedPost.likes.includes(currentUser.id);
+
+      res.json({
+        success: true,
+        isLiked: isLiked,
+        likesCount: updatedPost.likesCount || 0,
+        message: isLiked ? 'Post liked' : 'Post unliked'
+      });
+    } catch (error) {
+      console.error('Toggle like error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
+  // Add comment to a post
+  async addComment(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const { id } = req.params;
+    const { text } = req.body;
+
+    // Validation
+    if (!text || typeof text !== 'string' || text.trim().length === 0) {
+      return res.status(400).json({ error: 'Comment text is required' });
+    }
+
+    if (text.trim().length > 500) {
+      return res.status(400).json({ error: 'Comment must not exceed 500 characters' });
+    }
+
+    try {
+      // Check if post exists and user has access to it
+      const post = await Post.findById(id);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+
+      // Check if user can view this post (same logic as getPostById)
+      const isAuthor = post.authorId === currentUser.id;
+      let hasAccess = isAuthor;
+
+      if (!hasAccess) {
+        const community = await Community.findById(post.communityId);
+        const isManager = community && community.managerId === currentUser.id;
+        
+        if (isManager) {
+          hasAccess = true;
+        } else {
+          const isSubscribed = await CommunitySubscription.findByUserAndCommunity(
+            currentUser.id, 
+            post.communityId
+          );
+          hasAccess = !!isSubscribed;
+        }
+      }
+
+      if (!hasAccess) {
+        return res.status(403).json({ error: 'You do not have access to this post' });
+      }
+
+      // Add comment
+      const commentData = {
+        text: text.trim(),
+        authorId: currentUser.id,
+        authorName: currentUser.name,
+        authorProfilePicture: currentUser.profilePicture || null
+      };
+
+      const updatedPost = await Post.addComment(id, commentData);
+      if (!updatedPost) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+
+      // Return the new comment
+      const newComment = updatedPost.comments[updatedPost.comments.length - 1];
+
+      res.status(201).json({
+        success: true,
+        comment: newComment,
+        message: 'Comment added successfully'
+      });
+    } catch (error) {
+      console.error('Add comment error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
+  // Get comments for a post
+  async getComments(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const { id } = req.params;
+
+    try {
+      // Check if post exists and user has access to it
+      const post = await Post.findById(id);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+
+      // Check if user can view this post (same logic as getPostById)
+      const isAuthor = post.authorId === currentUser.id;
+      let hasAccess = isAuthor;
+
+      if (!hasAccess) {
+        const community = await Community.findById(post.communityId);
+        const isManager = community && community.managerId === currentUser.id;
+        
+        if (isManager) {
+          hasAccess = true;
+        } else {
+          const isSubscribed = await CommunitySubscription.findByUserAndCommunity(
+            currentUser.id, 
+            post.communityId
+          );
+          hasAccess = !!isSubscribed;
+        }
+      }
+
+      if (!hasAccess) {
+        return res.status(403).json({ error: 'You do not have access to this post' });
+      }
+
+      // Get comments sorted by date (newest first)
+      const comments = await Post.getComments(id);
+      const sortedComments = comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      res.json({
+        success: true,
+        comments: sortedComments
+      });
+    } catch (error) {
+      console.error('Get comments error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
+  // Update comment (only by comment author)
+  async updateComment(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const { postId, commentId } = req.params;
+    const { text } = req.body;
+
+    // Validation
+    if (!text || typeof text !== 'string' || text.trim().length === 0) {
+      return res.status(400).json({ error: 'Comment text is required' });
+    }
+
+    if (text.trim().length > 500) {
+      return res.status(400).json({ error: 'Comment must not exceed 500 characters' });
+    }
+
+    try {
+      // Check if post exists and user has access to it
+      const post = await Post.findById(postId);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+
+      // Check if user can view this post (same logic as getPostById)
+      const isAuthor = post.authorId === currentUser.id;
+      let hasAccess = isAuthor;
+
+      if (!hasAccess) {
+        const community = await Community.findById(post.communityId);
+        const isManager = community && community.managerId === currentUser.id;
+        
+        if (isManager) {
+          hasAccess = true;
+        } else {
+          const isSubscribed = await CommunitySubscription.findByUserAndCommunity(
+            currentUser.id, 
+            post.communityId
+          );
+          hasAccess = !!isSubscribed;
+        }
+      }
+
+      if (!hasAccess) {
+        return res.status(403).json({ error: 'You do not have access to this post' });
+      }
+
+      // Find the comment and check if current user is the author
+      const comment = await Post.findComment(postId, commentId);
+      if (!comment) {
+        return res.status(404).json({ error: 'Comment not found' });
+      }
+
+      if (comment.authorId !== currentUser.id) {
+        return res.status(403).json({ error: 'Only comment author can update comment' });
+      }
+
+      // Update comment
+      const updatedPost = await Post.updateComment(postId, commentId, text.trim());
+      if (!updatedPost) {
+        return res.status(404).json({ error: 'Failed to update comment' });
+      }
+
+      // Find the updated comment
+      const updatedComment = updatedPost.comments.find(c => c.id === commentId);
+
+      res.json({
+        success: true,
+        comment: updatedComment,
+        message: 'Comment updated successfully'
+      });
+    } catch (error) {
+      console.error('Update comment error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
+  // Delete comment (only by comment author)
+  async deleteComment(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const { postId, commentId } = req.params;
+
+    try {
+      // Check if post exists and user has access to it
+      const post = await Post.findById(postId);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+
+      // Check if user can view this post (same logic as getPostById)
+      const isAuthor = post.authorId === currentUser.id;
+      let hasAccess = isAuthor;
+
+      if (!hasAccess) {
+        const community = await Community.findById(post.communityId);
+        const isManager = community && community.managerId === currentUser.id;
+        
+        if (isManager) {
+          hasAccess = true;
+        } else {
+          const isSubscribed = await CommunitySubscription.findByUserAndCommunity(
+            currentUser.id, 
+            post.communityId
+          );
+          hasAccess = !!isSubscribed;
+        }
+      }
+
+      if (!hasAccess) {
+        return res.status(403).json({ error: 'You do not have access to this post' });
+      }
+
+      // Find the comment and check if current user is the author
+      const comment = await Post.findComment(postId, commentId);
+      if (!comment) {
+        return res.status(404).json({ error: 'Comment not found' });
+      }
+
+      if (comment.authorId !== currentUser.id) {
+        return res.status(403).json({ error: 'Only comment author can delete comment' });
+      }
+
+      // Delete comment
+      const updatedPost = await Post.deleteComment(postId, commentId);
+      if (!updatedPost) {
+        return res.status(404).json({ error: 'Failed to delete comment' });
+      }
+
+      res.json({
+        success: true,
+        message: 'Comment deleted successfully'
+      });
+    } catch (error) {
+      console.error('Delete comment error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 };
 
