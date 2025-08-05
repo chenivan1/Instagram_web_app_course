@@ -28,20 +28,20 @@
             <div class="col-lg-2 col-md-3 col-sm-4 sidebar-container">
                 <img src="assets/recources/instagram.png" class="instagram">
                 <div class="sidebar_btns">
-                    <button id="themeToggleBtn" class="btn btn-outline-dark mt-3"> mode
-                    </button><!--button to switch to dark/light mode-->
                     <button class="sidebar_btn" type="button"><img src="assets/recources/home.png"
                             class="sidebar_icons"> Home</button>
                     <button class="sidebar_btn" type="button" onclick="window.location.href='/posts-creation'"><img
                             src="assets/recources/create.png" class="sidebar_icons"> Create</button>
-                    <button class="sidebar_btn" type="button" onclick="window.location.href='/communities-management'"><img
-                            src="assets/recources/explore.png" class="sidebar_icons"> Communities</button>
+                    <button class="sidebar_btn" type="button"
+                        onclick="window.location.href='/communities-management'"><img src="assets/recources/more.png"
+                            class="sidebar_icons"> Communities</button>
                     <button class="sidebar_btn" type="button" onclick="window.location.href='/news'"><img
                             src="assets/recources/messages-removebg.png" class="sidebar_icons"> News</button>
                     <button class="sidebar_btn" type="button" onclick="window.location.href='/addresses'"><img
-                            src="assets/recources/profile.png" class="sidebar_icons"> Addresses</button>
-                    <button id="manage-users-btn" class="sidebar_btn" type="button" style="display: none;" onclick="window.location.href='/user/user-management'"><img
-                            src="assets/recources/profile.png" class="sidebar_icons"> Manage Users</button>
+                            src="assets/recources/explore.png" class="sidebar_icons"> Addresses</button>
+                    <button id="manage-users-btn" class="sidebar_btn" type="button" style="display: none;"
+                        onclick="window.location.href='/user/user-management'"><img src="assets/recources/profile.png"
+                            class="sidebar_icons"> Manage Users</button>
                     <button id="logout-btn" class="sidebar_btn" type="button"><img src="assets/recources/logout.png"
                             class="sidebar_icons"> Logout</button>
 
@@ -69,153 +69,44 @@
                 </div>
 
             </div>
-
-            <div class="col-lg-6 col-md-6 col-sm-8 feed-container">
-                <!-- Filter checkbox above feed -->
-                <div class="mb-3 d-flex align-items-center gap-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="myPostsOnlyFilter">
-                        <label class="form-check-label" for="myPostsOnlyFilter">
-                            Show only my posts
-                        </label>
-                    </div>
-                    <button class="btn btn-outline-primary btn-sm" onclick="window.location.href='/posts-creation'">
-                        Create New Post
-                    </button>
-                </div>
-                <!-- Stories Section -->
-                <div class="stories">
-                    <div class="story">
-                        <img class="story-pic" src="assets/recources/chandler.jpg" alt="Story 1">
-                        <p class="story-username">chandler_bing</p>
-                    </div>
-                    <div class="story">
-                        <img class="story-pic" src="assets/recources/joey.jpg" alt="Story 2">
-                        <p class="story-username">the_joey</p>
-                    </div>
-                    <div class="story">
-                        <img class="story-pic" src="assets/recources/story4.jpg" alt="Story 3">
-                        <p class="story-username">Dr.geller</p>
-                    </div>
-                    <div class="story">
-                        <img class="story-pic" src="assets/recources/janice.jpg" alt="Story 4">
-                        <p class="story-username">Janice</p>
-                    </div>
-                    <div class="story">
-                        <img class="story-pic" src="assets/recources/rachel.jpg" alt="Story 5">
-                        <p class="story-username">Rachel</p>
-                    </div>
-                    <div class="story">
-                        <img class="story-pic" src="assets/recources/phoebe.jpg" alt="Story 6">
-                        <p class="story-username">Phoebe</p>
-                    </div>
-                    <div class="story">
-                        <img class="story-pic" src="assets/recources/estelle.jpg" alt="Story 7">
-                        <p class="story-username">Estelle_Talent</p>
-                    </div>
-                    <div class="story">
-                        <img class="story-pic" src="assets/recources/Mr.Heckles.jpg" alt="Story 8">
-                        <p class="story-username">Mr.Heckles</p>
-                    </div>
-                </div>
-                <!-- Posts Section -->
-                <div class="posts mt-5" id="postsContainer">
-                    <!-- Posts will be loaded dynamically here -->
-                    <div class="loading-posts text-center py-5">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2 text-muted">Loading your feed...</p>
-                        </div>
-                    </div>
-
-                <!-- Empty State -->
-                <div id="emptyFeedState" class="text-center py-5" style="display: none;">
-                    <h4 class="text-muted">No posts in your feed</h4>
-                    <p class="text-muted">Subscribe to communities to see posts here, or create your first post!</p>
-                    <div class="mt-3">
-                        <a href="/communities-management" class="btn btn-outline-primary me-2">Browse Communities</a>
-                        <a href="/posts-creation" class="btn btn-primary">Create Post</a>
-                    </div>
-                </div>
-
-                <!-- suggestion container -->
-            </div>
-            <!--
-                d-none with d-lg-block - dosent show the element at all on small and medium screens. Shows it as a block only on large screens and above.
-             -->
-            <div class="col-lg-3 d-none d-lg-block suggestion-container">
-                <!-- User Profile Top  -->
-                <div class="user-profile">
-                    <img src="assets/recources/user.jpg" alt="User Profile">
-                    <div class="user-info">
-                        <p class="username">Monica</p>
-                        <p class="name">monica geller</p>
-                    </div>
-                    <a href="#" class="switch">Switch</a>
-                </div>
-
-                <!-- Suggested for you Section -->
-                <div class="suggestions-header">
-                    <p class="suggested-for-you">Suggested for you</p>
-                    <a href="#" class="see-all">See All</a>
-                </div>
-
-                <div class="suggestions-list">
-
-                    <!-- first suggested user -->
-                    <div class="suggestion">
-                        <img src="assets/recources/richardBurke.jpg" alt="Suggested User">
-                        <div class="suggestion-info">
-                            <p class="px-1 mb-1 username">Dr.Burke</p>
-                            <p class="relation">Followed by Dr.geller + 12 more</p>
-                        </div>
-                        <a href="#" class="px-1 mb-1 follow-btn">Follow</a>
-                    </div>
-
-                    <!-- second suggested user -->
-                    <div class="suggestion">
-                        <img src="assets/recources/gunther.jpg" alt="Suggested User">
-                        <div class="suggestion-info">
-                            <p class="px-1 mb-1 username">the_gunther</p>
-                            <p class="relation">Followed by Phoebe + 2 more</p>
-                        </div>
-                        <a href="#" class="follow-btn">Follow</a>
-                    </div>
-
-                    <!-- third suggested user -->
-                    <div class="suggestion">
-                        <img src="assets/recources/mike.jpg" alt="Suggested User">
-                        <div class="suggestion-info">
-                            <p class="px-1 mb-1 username">mike_134</p>
-                            <p class="relation">Followed by phoebe...</p>
-                        </div>
-                        <a href="#" class="follow-btn">Follow</a>
-                    </div>
-
-                    <!-- fourth suggested user -->
-                    <div class="suggestion">
-                        <img src="assets/recources/tag2.jpg" alt="Suggested User">
-                        <div class="suggestion-info">
-                            <p class="px-1 mb-1 username">Tag_Jones</p>
-                            <p class="relation">Followed by phoebe + 2 more</p>
-                        </div>
-                        <a href="#" class="follow-btn">Follow</a>
-                    </div>
-
-                    <!-- fifth suggested user  blabla-->
-                    <div class="suggestion">
-                        <img src="assets/recources/jess.jpg" alt="Suggested User">
-                        <div class="suggestion-info">
-                            <p class="px-1 mb-1 username">JessMariano</p>
-                            <p class="relation">Followed by RoryGil + 7 more</p>
-                        </div>
-                        <a href="#" class="follow-btn">Follow</a>
-                    </div>
-                </div>
-
-            </div>
         </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-8 feed-container">
+            <!-- Filter checkbox above feed -->
+            <div class="mb-3 d-flex align-items-center gap-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="myPostsOnlyFilter">
+                    <label class="form-check-label" for="myPostsOnlyFilter">
+                        Show only my posts
+                    </label>
+                </div>
+            </div>
+
+            <!-- Posts Section -->
+            <div class="posts mt-5" id="postsContainer">
+                <!-- Posts will be loaded dynamically here -->
+                <div class="loading-posts text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Loading your feed...</p>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyFeedState" class="text-center py-5" style="display: none;">
+                <h4 class="text-muted">No posts in your feed</h4>
+                <p class="text-muted">Subscribe to communities to see posts here, or create your first post!</p>
+                <div class="mt-3">
+                    <a href="/communities-management" class="btn btn-outline-primary me-2">Browse Communities</a>
+                    <a href="/posts-creation" class="btn btn-primary">Create Post</a>
+                </div>
+            </div>
+
+            <!-- suggestion container -->
+        </div>
+
+    </div>
 
     </div>
 
