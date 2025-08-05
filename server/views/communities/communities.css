@@ -113,6 +113,26 @@ body {
     color: #262626;
 }
 
+.btn-statistics {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: white;
+    font-weight: 500;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    margin-left: 5px;
+}
+
+.btn-statistics:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+    color: white;
+}
+
+.btn-statistics i {
+    margin-right: 4px;
+}
+
 /* Search Input */
 #searchInput {
     border: 1px solid #dbdbdb;

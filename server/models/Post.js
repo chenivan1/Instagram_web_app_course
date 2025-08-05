@@ -511,6 +511,67 @@ const PostModel = {
       if (!post) return null;
       return post.comments?.find(c => c.id === commentId) || null;
     }
+  },
+
+  // Get post activity statistics aggregated by community
+  async getPostActivityStats(communityIds) {
+    if (useDb) {
+      const db = await connectDB();
+      const pipeline = [
+        {
+          $match: {
+            communityId: { $in: communityIds }
+          }
+        },
+        {
+          $group: {
+            _id: '$communityId',
+            totalPosts: { $sum: 1 },
+            totalLikes: { $sum: '$likesCount' },
+            totalComments: { 
+              $sum: { 
+                $cond: { 
+                  if: { $isArray: '$comments' }, 
+                  then: { $size: '$comments' }, 
+                  else: 0 
+                } 
+              } 
+            }
+          }
+        },
+        {
+          $sort: { '_id': 1 }
+        }
+      ];
+
+      return await db.collection('posts').aggregate(pipeline).toArray();
+    } else {
+      // Mock data aggregation (simulating $group behavior)
+      const relevantPosts = mockPosts.filter(post => 
+        communityIds.includes(post.communityId)
+      );
+
+      // Simulate MongoDB $group operation
+      const groupedData = {};
+      
+      relevantPosts.forEach(post => {
+        if (!groupedData[post.communityId]) {
+          groupedData[post.communityId] = {
+            _id: post.communityId,
+            totalPosts: 0,
+            totalLikes: 0,
+            totalComments: 0
+          };
+        }
+        
+        groupedData[post.communityId].totalPosts++;
+        groupedData[post.communityId].totalLikes += (post.likesCount || 0);
+        groupedData[post.communityId].totalComments += (post.comments?.length || 0);
+      });
+
+      // Convert grouped data to array format similar to MongoDB aggregation
+      return Object.values(groupedData).sort((a, b) => a._id.localeCompare(b._id));
+    }
   }
 };
 

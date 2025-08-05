@@ -187,6 +187,9 @@ function getActionButtons(community, isSubscribed, isManaged) {
             <button class="btn btn-manage" onclick="editCommunityModal('${community.id}')">
                 Edit Community
             </button>
+            <button class="btn btn-statistics" onclick="window.location.href='/communities/statistics/page'" title="View Statistics">
+                <i class="fas fa-chart-bar"></i> Stats
+            </button>
         `;
     } else {
         if (isSubscribed) {

@@ -1,0 +1,260 @@
+/* Statistics Page Styles */
+body {
+    background-color: #fafafa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Sidebar Styles (matching communities.css) */
+.sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #fff;
+    border-right: 1px solid #dbdbdb;
+    padding: 20px 0;
+    z-index: 1000;
+}
+
+.instagram {
+    width: 120px;
+    height: auto;
+    margin: 0 auto 30px;
+    display: block;
+}
+
+.sidebar_btns {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0 15px;
+}
+
+.sidebar_btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #262626;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+}
+
+.sidebar_btn:hover {
+    background-color: #f5f5f5;
+}
+
+.sidebar_icons {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Main Content */
+.container {
+    margin-left: 16%;
+    max-width: calc(100% - 16%);
+    padding: 20px;
+}
+
+/* Chart Containers */
+#subscriberGrowthChart, #postActivityChart {
+    min-height: 400px;
+    width: 100%;
+}
+
+/* Card Styles */
+.card {
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    color: #262626;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+/* Summary Stats Cards */
+.summary-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card h4 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.summary-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Chart Styling */
+.line {
+    fill: none;
+    stroke-width: 3;
+}
+
+.line-tech {
+    stroke: #667eea;
+}
+
+.line-photo {
+    stroke: #f093fb;
+}
+
+.line-food {
+    stroke: #4facfe;
+}
+
+.line-travel {
+    stroke: #43e97b;
+}
+
+.line-fitness {
+    stroke: #fa709a;
+}
+
+.dot {
+    fill: white;
+    stroke-width: 2;
+    r: 4;
+}
+
+.dot:hover {
+    r: 6;
+}
+
+.axis {
+    font-size: 12px;
+    color: #666;
+}
+
+.axis-label {
+    font-size: 14px;
+    font-weight: 600;
+    fill: #333;
+}
+
+.legend {
+    font-size: 12px;
+}
+
+.legend-item {
+    cursor: pointer;
+}
+
+.legend-item:hover {
+    opacity: 0.7;
+}
+
+.bar {
+    transition: opacity 0.3s ease;
+}
+
+.bar:hover {
+    opacity: 0.8;
+}
+
+.tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Loading and Empty States */
+#loadingSpinner {
+    padding: 60px 0;
+}
+
+#noDataMessage {
+    margin: 60px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar-container {
+        width: 60px;
+        padding: 10px 0;
+    }
+    
+    .sidebar_btn {
+        padding: 10px 5px;
+        font-size: 0;
+        justify-content: center;
+    }
+    
+    .sidebar_btn span {
+        display: none;
+    }
+    
+    .instagram {
+        width: 40px;
+        margin-bottom: 20px;
+    }
+    
+    .container {
+        margin-left: 70px;
+        max-width: calc(100% - 80px);
+        padding: 15px;
+    }
+    
+    #subscriberGrowthChart, #postActivityChart {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 10px;
+    }
+    
+    .sidebar-container {
+        display: none;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .card-header {
+        padding: 15px;
+    }
+}
