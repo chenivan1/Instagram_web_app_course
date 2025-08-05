@@ -150,6 +150,106 @@ const PostController = {
     }
   },
 
+  // Advanced post search
+  async searchPosts(req, res) {
+    const currentUser = SessionManager.getLoggedInUser();
+    
+    if (!currentUser) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const { 
+      community, 
+      authorName, 
+      dateFrom, 
+      dateTo, 
+      minLikes, 
+      hasComments 
+    } = req.query;
+
+    try {
+      // Get user's subscribed communities to limit search scope
+      const subscriptions = await CommunitySubscription.getUserSubscriptions(currentUser.id);
+      const subscribedCommunityIds = subscriptions.map(sub => sub.communityId);
+
+      // Get all posts from subscribed communities + user's own posts
+      const allPosts = await Post.findFeedPosts(subscribedCommunityIds, currentUser.id);
+
+      // Apply filters
+      let filteredPosts = allPosts;
+
+      // Filter by community
+      if (community && community.trim()) {
+        filteredPosts = filteredPosts.filter(post => 
+          post.communityName.toLowerCase().includes(community.toLowerCase()) ||
+          post.communityId === community
+        );
+      }
+
+      // Filter by author name
+      if (authorName && authorName.trim()) {
+        filteredPosts = filteredPosts.filter(post => 
+          post.authorName.toLowerCase().includes(authorName.toLowerCase())
+        );
+      }
+
+      // Filter by date range
+      if (dateFrom) {
+        const fromDate = new Date(dateFrom);
+        filteredPosts = filteredPosts.filter(post => 
+          new Date(post.createdAt) >= fromDate
+        );
+      }
+
+      if (dateTo) {
+        const toDate = new Date(dateTo);
+        toDate.setHours(23, 59, 59, 999); // Include the entire day
+        filteredPosts = filteredPosts.filter(post => 
+          new Date(post.createdAt) <= toDate
+        );
+      }
+
+      // Filter by minimum likes
+      if (minLikes && !isNaN(parseInt(minLikes))) {
+        const minLikesNum = parseInt(minLikes);
+        filteredPosts = filteredPosts.filter(post => 
+          (post.likesCount || 0) >= minLikesNum
+        );
+      }
+
+      // Filter by has comments
+      if (hasComments !== undefined) {
+        const shouldHaveComments = hasComments === 'true';
+        filteredPosts = filteredPosts.filter(post => {
+          const hasPostComments = post.comments && post.comments.length > 0;
+          return shouldHaveComments ? hasPostComments : !hasPostComments;
+        });
+      }
+
+      // Enhance posts with author profile pictures
+      const enhancedPosts = await Promise.all(filteredPosts.map(async (post) => {
+        try {
+          const author = await User.findById(post.authorId);
+          return {
+            ...post,
+            authorProfilePicture: author ? author.profilePicture : null
+          };
+        } catch (error) {
+          console.error(`Error fetching author data for post ${post.id}:`, error);
+          return {
+            ...post,
+            authorProfilePicture: null
+          };
+        }
+      }));
+
+      res.json(enhancedPosts);
+    } catch (error) {
+      console.error('Search posts error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
   // Get posts in a specific community
   async getCommunityPosts(req, res) {
     const currentUser = SessionManager.getLoggedInUser();

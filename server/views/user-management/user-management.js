@@ -60,18 +60,26 @@ function initializeUserManagement() {
     attachEventListeners();
     
     // Load all users initially
-    searchUsers('');
+    searchUsers();
 }
 
 function attachEventListeners() {
     // Search functionality
     const clearBtn = document.getElementById('clearBtn');
+    const searchBtn = document.getElementById('searchBtn');
     const searchInput = document.getElementById('userSearch');
+    const userRoleFilter = document.getElementById('userRoleFilter');
+    const dateFromFilter = document.getElementById('dateFromFilter');
+    const dateToFilter = document.getElementById('dateToFilter');
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     const logoutBtn = document.getElementById('logout-btn');
     
     if (clearBtn) {
         clearBtn.addEventListener('click', handleClear);
+    }
+    
+    if (searchBtn) {
+        searchBtn.addEventListener('click', handleSearch);
     }
     
     if (searchInput) {
@@ -92,6 +100,19 @@ function attachEventListeners() {
         });
     }
     
+    // Add change listeners to other filters
+    if (userRoleFilter) {
+        userRoleFilter.addEventListener('change', handleSearch);
+    }
+    
+    if (dateFromFilter) {
+        dateFromFilter.addEventListener('change', handleSearch);
+    }
+    
+    if (dateToFilter) {
+        dateToFilter.addEventListener('change', handleSearch);
+    }
+    
     if (confirmDeleteBtn) {
         confirmDeleteBtn.addEventListener('click', handleConfirmDelete);
     }
@@ -102,24 +123,42 @@ function attachEventListeners() {
 }
 
 function handleSearch() {
-    const searchInput = document.getElementById('userSearch');
-    const query = searchInput ? searchInput.value.trim() : '';
-    searchUsers(query);
+    searchUsers();
 }
 
 function handleClear() {
-    const searchInput = document.getElementById('userSearch');
-    if (searchInput) {
-        searchInput.value = '';
-    }
-    searchUsers('');
+    // Clear all form inputs
+    const userSearch = document.getElementById('userSearch');
+    const userRoleFilter = document.getElementById('userRoleFilter');
+    const dateFromFilter = document.getElementById('dateFromFilter');
+    const dateToFilter = document.getElementById('dateToFilter');
+    
+    if (userSearch) userSearch.value = '';
+    if (userRoleFilter) userRoleFilter.value = '';
+    if (dateFromFilter) dateFromFilter.value = '';
+    if (dateToFilter) dateToFilter.value = '';
+    
+    searchUsers();
 }
 
-function searchUsers(query) {
+function searchUsers() {
     showLoading(true);
     hideMessages();
     
-    const url = query ? `/user/search?query=${encodeURIComponent(query)}` : '/user/search';
+    // Get filter values
+    const query = document.getElementById('userSearch').value.trim();
+    const userRole = document.getElementById('userRoleFilter').value;
+    const dateFrom = document.getElementById('dateFromFilter').value;
+    const dateTo = document.getElementById('dateToFilter').value;
+    
+    // Build query parameters
+    const params = new URLSearchParams();
+    if (query) params.append('query', query);
+    if (userRole) params.append('userRole', userRole);
+    if (dateFrom) params.append('dateFrom', dateFrom);
+    if (dateTo) params.append('dateTo', dateTo);
+    
+    const url = `/user/search${params.toString() ? '?' + params.toString() : ''}`;
     
     makeRequest('GET', url)
         .then(function(users) {
@@ -258,10 +297,8 @@ function handleConfirmDelete() {
             
             showSuccess(response.message || 'User deleted successfully');
             
-            // Refresh the user list
-            const searchInput = document.getElementById('userSearch');
-            const query = searchInput ? searchInput.value.trim() : '';
-            searchUsers(query);
+                            // Refresh the user list
+                searchUsers();
         })
         .catch(function(error) {
             let errorMessage = 'Failed to delete user';
@@ -288,9 +325,7 @@ function toggleUserRole(userId, user) {
                 showSuccess(response.message || 'User role updated successfully');
                 
                 // Refresh the user list
-                const searchInput = document.getElementById('userSearch');
-                const query = searchInput ? searchInput.value.trim() : '';
-                searchUsers(query);
+                searchUsers();
             })
             .catch(function(error) {
                 let errorMessage = 'Failed to update user role';
