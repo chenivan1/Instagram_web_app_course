@@ -5,6 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 // Post CRUD routes
 router.post('/', authMiddleware.requireAuth, PostController.createPost);
+router.get('/search', authMiddleware.requireAuth, PostController.searchPosts);
 router.get('/my', authMiddleware.requireAuth, PostController.getUserPosts);
 router.get('/:id', authMiddleware.requireAuth, PostController.getPostById);
 router.put('/:id', authMiddleware.requireAuth, PostController.updatePost);

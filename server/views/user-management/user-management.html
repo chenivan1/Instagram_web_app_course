@@ -21,6 +21,12 @@
                     <button class="sidebar_btn" type="button" onclick="window.location.href='/home'">
                         <img src="/assets/recources/home.png" class="sidebar_icons"> Home
                     </button>
+                    <button class="sidebar_btn" type="button" onclick="window.location.href='/posts-creation'">
+                        <img src="/assets/recources/create.png" class="sidebar_icons"> Create Post
+                    </button>
+                    <button class="sidebar_btn" type="button" onclick="window.location.href='/communities-management'">
+                        <img src="/assets/recources/explore.png" class="sidebar_icons"> Communities
+                    </button>
                     <button class="sidebar_btn" type="button" onclick="window.location.href='/news'">
                         <img src="/assets/recources/messages-removebg.png" class="sidebar_icons"> News
                     </button>
@@ -44,10 +50,44 @@
 
                     <!-- Search Section -->
                     <div class="search-section">
-                        <div class="search-container">
-                            <input type="text" id="userSearch" class="form-control search-input"
-                                placeholder="Search users by full name..." maxlength="100">
-                            <button id="clearBtn" class="btn btn-secondary clear-btn">Clear</button>
+                        <div class="search-form">
+                            <div class="row g-3">
+                                <!-- Name Search -->
+                                <div class="col-md-6">
+                                    <label for="userSearch" class="form-label">User Name</label>
+                                    <input type="text" id="userSearch" class="form-control"
+                                        placeholder="Search by full name..." maxlength="100">
+                                </div>
+
+                                <!-- User Role Filter -->
+                                <div class="col-md-6">
+                                    <label for="userRoleFilter" class="form-label">User Role</label>
+                                    <select class="form-select" id="userRoleFilter">
+                                        <option value="">All Users</option>
+                                        <option value="admin">Admin Users</option>
+                                        <option value="regular">Regular Users</option>
+                                    </select>
+                                </div>
+
+                                <!-- Registration Date Range -->
+                                <div class="col-md-6">
+                                    <label for="dateFromFilter" class="form-label">Registered From</label>
+                                    <input type="date" class="form-control" id="dateFromFilter">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="dateToFilter" class="form-label">Registered To</label>
+                                    <input type="date" class="form-control" id="dateToFilter">
+                                </div>
+                            </div>
+
+                            <!-- Search Buttons -->
+                            <div class="search-buttons mt-3">
+                                <button id="searchBtn" class="btn btn-primary">
+                                    <img src="/assets/recources/search.png" alt="Search" class="btn-icon"> Search Users
+                                </button>
+                                <button id="clearBtn" class="btn btn-secondary">Clear Filters</button>
+                            </div>
                         </div>
                     </div>
 

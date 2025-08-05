@@ -152,16 +152,43 @@ const UserController = {
       return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
     }
     
-    const { query } = req.query;
+    const { query, dateFrom, dateTo, userRole } = req.query;
     
     try {
       const users = await User.find();
       let filteredUsers = users;
       
+      // Filter by name
       if (query && query.trim()) {
         const searchTerm = query.toLowerCase().trim();
-        filteredUsers = users.filter(user => 
+        filteredUsers = filteredUsers.filter(user => 
           user.name.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Filter by registration date range
+      if (dateFrom) {
+        const fromDate = new Date(dateFrom);
+        filteredUsers = filteredUsers.filter(user => {
+          const userCreatedAt = new Date(user.createdAt);
+          return userCreatedAt >= fromDate;
+        });
+      }
+      
+      if (dateTo) {
+        const toDate = new Date(dateTo);
+        toDate.setHours(23, 59, 59, 999); // Include the entire day
+        filteredUsers = filteredUsers.filter(user => {
+          const userCreatedAt = new Date(user.createdAt);
+          return userCreatedAt <= toDate;
+        });
+      }
+      
+      // Filter by user role
+      if (userRole && userRole !== '') {
+        const isAdminFilter = userRole === 'admin';
+        filteredUsers = filteredUsers.filter(user => 
+          user.isAdmin === isAdminFilter
         );
       }
       

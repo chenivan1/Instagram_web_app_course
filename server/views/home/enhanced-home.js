@@ -3,11 +3,16 @@
 let currentFeedPosts = [];
 let currentUser = null;
 let isMyPostsOnly = false;
+let isSearchFiltersVisible = false;
 
 // DOM Elements
 const postsContainer = document.getElementById('postsContainer');
 const myPostsOnlyFilter = document.getElementById('myPostsOnlyFilter');
 const emptyFeedState = document.getElementById('emptyFeedState');
+const toggleSearchBtn = document.getElementById('toggleSearchBtn');
+const searchFiltersCollapse = document.getElementById('searchFiltersCollapse');
+const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
@@ -94,7 +99,22 @@ function updateUserDetails(user) {
 function setupEventListeners() {
     // My posts only filter
     if (myPostsOnlyFilter) {
-        myPostsOnlyFilter.addEventListener('change', handleFilterChange);
+        myPostsOnlyFilter.addEventListener('change', handleMyPostsFilter);
+    }
+    
+    // Toggle search filters
+    if (toggleSearchBtn) {
+        toggleSearchBtn.addEventListener('click', toggleSearchFilters);
+    }
+    
+    // Apply filters button
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', applyAdvancedFilters);
+    }
+    
+    // Clear filters button
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', clearAdvancedFilters);
     }
     
     // Logout button
@@ -138,10 +158,122 @@ function loadHomeFeed() {
     xhr.send();
 }
 
-// Handle filter change
-function handleFilterChange() {
+// Handle my posts filter change
+function handleMyPostsFilter() {
     isMyPostsOnly = myPostsOnlyFilter.checked;
+    if (isMyPostsOnly) {
+        // Clear other filters when showing only my posts
+        clearOtherFilters();
+    }
     loadHomeFeed();
+}
+
+// Toggle search filters visibility
+function toggleSearchFilters() {
+    isSearchFiltersVisible = !isSearchFiltersVisible;
+    const toggleText = document.getElementById('toggleSearchText');
+    
+    if (isSearchFiltersVisible) {
+        searchFiltersCollapse.style.display = 'block';
+        toggleText.textContent = 'Hide Filters';
+    } else {
+        searchFiltersCollapse.style.display = 'none';
+        toggleText.textContent = 'Show Filters';
+    }
+}
+
+// Apply advanced filters
+function applyAdvancedFilters() {
+    // If using advanced filters, uncheck my posts only
+    if (myPostsOnlyFilter) {
+        myPostsOnlyFilter.checked = false;
+        isMyPostsOnly = false;
+    }
+    
+    loadAdvancedSearch();
+}
+
+// Clear all advanced filters
+function clearAdvancedFilters() {
+    // Clear all filter inputs
+    const communityFilter = document.getElementById('communityFilter');
+    const authorFilter = document.getElementById('authorFilter');
+    const dateFromFilter = document.getElementById('dateFromFilter');
+    const dateToFilter = document.getElementById('dateToFilter');
+    const minLikesFilter = document.getElementById('minLikesFilter');
+    const hasCommentsFilter = document.getElementById('hasCommentsFilter');
+    
+    if (communityFilter) communityFilter.value = '';
+    if (authorFilter) authorFilter.value = '';
+    if (dateFromFilter) dateFromFilter.value = '';
+    if (dateToFilter) dateToFilter.value = '';
+    if (minLikesFilter) minLikesFilter.value = '';
+    if (hasCommentsFilter) hasCommentsFilter.value = '';
+    
+    // Also clear my posts filter
+    if (myPostsOnlyFilter) {
+        myPostsOnlyFilter.checked = false;
+        isMyPostsOnly = false;
+    }
+    
+    // Reload normal feed
+    loadHomeFeed();
+}
+
+// Clear other filters when my posts is selected
+function clearOtherFilters() {
+    const communityFilter = document.getElementById('communityFilter');
+    const authorFilter = document.getElementById('authorFilter');
+    const dateFromFilter = document.getElementById('dateFromFilter');
+    const dateToFilter = document.getElementById('dateToFilter');
+    const minLikesFilter = document.getElementById('minLikesFilter');
+    const hasCommentsFilter = document.getElementById('hasCommentsFilter');
+    
+    if (communityFilter) communityFilter.value = '';
+    if (authorFilter) authorFilter.value = '';
+    if (dateFromFilter) dateFromFilter.value = '';
+    if (dateToFilter) dateToFilter.value = '';
+    if (minLikesFilter) minLikesFilter.value = '';
+    if (hasCommentsFilter) hasCommentsFilter.value = '';
+}
+
+// Load advanced search results
+function loadAdvancedSearch() {
+    showLoading();
+    
+    // Get filter values
+    const community = document.getElementById('communityFilter').value.trim();
+    const authorName = document.getElementById('authorFilter').value.trim();
+    const dateFrom = document.getElementById('dateFromFilter').value;
+    const dateTo = document.getElementById('dateToFilter').value;
+    const minLikes = document.getElementById('minLikesFilter').value;
+    const hasComments = document.getElementById('hasCommentsFilter').value;
+    
+    // Build query parameters
+    const params = new URLSearchParams();
+    if (community) params.append('community', community);
+    if (authorName) params.append('authorName', authorName);
+    if (dateFrom) params.append('dateFrom', dateFrom);
+    if (dateTo) params.append('dateTo', dateTo);
+    if (minLikes) params.append('minLikes', minLikes);
+    if (hasComments) params.append('hasComments', hasComments);
+    
+    const url = `/posts/search${params.toString() ? '?' + params.toString() : ''}`;
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                currentFeedPosts = JSON.parse(xhr.responseText);
+                displayFeedPosts();
+            } else {
+                showError('Failed to search posts. Please try again.');
+                hideLoading();
+            }
+        }
+    };
+    xhr.send();
 }
 
 // Display feed posts

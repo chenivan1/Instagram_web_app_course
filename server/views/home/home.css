@@ -1029,3 +1029,119 @@ body.dark-mode {
         font-size: 13px;
     }
 }
+
+/* Advanced Search Section Styles */
+.advanced-search-section {
+    background: #ffffff;
+    border: 1px solid #dbdbdb;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.search-header h5 {
+    color: #262626;
+    font-weight: 600;
+    margin: 0;
+}
+
+.search-filters {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #efefef;
+}
+
+.search-filters .form-label {
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+.search-filters .form-control-sm,
+.search-filters .form-select-sm {
+    border: 1px solid #dbdbdb;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    transition: border-color 0.2s ease;
+}
+
+.search-filters .form-control-sm:focus,
+.search-filters .form-select-sm:focus {
+    border-color: #0095f6;
+    box-shadow: 0 0 0 0.1rem rgba(0, 149, 246, 0.25);
+}
+
+.search-filters .form-check {
+    padding-top: 8px;
+}
+
+.search-filters .form-check-label {
+    font-size: 14px;
+    color: #262626;
+    font-weight: 500;
+}
+
+.search-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-buttons .btn-sm {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.search-buttons .btn-primary {
+    background-color: #0095f6;
+    border-color: #0095f6;
+}
+
+.search-buttons .btn-primary:hover {
+    background-color: #0084d1;
+    border-color: #0084d1;
+    transform: translateY(-1px);
+}
+
+.search-buttons .btn-secondary {
+    background-color: #ffffff;
+    border-color: #dbdbdb;
+    color: #262626;
+}
+
+.search-buttons .btn-secondary:hover {
+    background-color: #f5f5f5;
+    border-color: #c7c7c7;
+}
+
+/* Responsive adjustments for search section */
+@media (max-width: 768px) {
+    .advanced-search-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .search-filters .row {
+        margin: 0;
+    }
+    
+    .search-filters .col-md-6 {
+        padding: 0 0 15px 0;
+    }
+    
+    .search-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-buttons .btn-sm {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
