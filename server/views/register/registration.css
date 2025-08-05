@@ -29,4 +29,27 @@ border-radius: 0%;
     margin-top: 20px;
     line-height: 1.5;
     text-align: center;
+}
+
+/* Profile Image Preview Styles */
+.profile-preview-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e1e5e9;
+    display: block;
+    margin: 0 auto;
+}
+
+#image_preview_container {
+    text-align: center;
+}
+
+#profile_image {
+    cursor: pointer;
+}
+
+#profile_image:hover {
+    border-color: #007bff;
 } 

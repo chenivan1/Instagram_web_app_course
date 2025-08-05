@@ -25,6 +25,16 @@
             flex-column            - For small and medium screens, layout children vertically (stacked).
         -->
         <div class="d-flex justify-content-between align-items-start flex-lg-row flex-column">
+            <!-- User Details Section - Top Right -->
+            <div class="user-details-container d-none d-lg-block">
+                <div class="user-profile-section">
+                    <img id="userProfilePicture" src="assets/recources/user.jpg" alt="Profile Picture" class="user-profile-img">
+                    <div class="user-info">
+                        <span id="userFullName" class="user-full-name">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="col-lg-2 col-md-3 col-sm-4 sidebar-container">
                 <img src="assets/recources/instagram.png" class="instagram">
                 <div class="sidebar_btns">

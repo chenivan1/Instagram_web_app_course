@@ -1,6 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
     const form_listener = document.getElementById("form_login")
     const messageDiv = document.getElementById("registration-message")
+    const profileImageInput = document.getElementById("profile_image")
+    const imagePreview = document.getElementById("image_preview")
+    const imagePreviewContainer = document.getElementById("image_preview_container")
+    const removeImageBtn = document.getElementById("remove_image")
+    
+    let profileImageBase64 = null
 
     // Debug logging
     console.log('Form element found:', form_listener)
@@ -24,6 +30,65 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function hideMessage() {
         messageDiv.style.display = 'none'
+    }
+
+    // Image handling functions
+    function handleImageSelect(event) {
+        const file = event.target.files[0]
+        
+        if (!file) {
+            clearImagePreview()
+            return
+        }
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            showMessage('Please select a valid image file.', true)
+            clearImagePreview()
+            return
+        }
+
+        // Validate file size (max 5MB)
+        const maxSize = 5 * 1024 * 1024 // 5MB in bytes
+        if (file.size > maxSize) {
+            showMessage('Image file size must be less than 5MB.', true)
+            clearImagePreview()
+            return
+        }
+
+        // Convert to base64 and show preview
+        const reader = new FileReader()
+        reader.onload = function(e) {
+            profileImageBase64 = e.target.result
+            showImagePreview(e.target.result)
+            hideMessage() // Hide any error messages
+        }
+        reader.onerror = function() {
+            showMessage('Error reading the image file.', true)
+            clearImagePreview()
+        }
+        reader.readAsDataURL(file)
+    }
+
+    function showImagePreview(imageSrc) {
+        imagePreview.src = imageSrc
+        imagePreviewContainer.style.display = 'block'
+    }
+
+    function clearImagePreview() {
+        profileImageBase64 = null
+        imagePreview.src = ''
+        imagePreviewContainer.style.display = 'none'
+        profileImageInput.value = ''
+    }
+
+    // Event listeners for image handling
+    if (profileImageInput) {
+        profileImageInput.addEventListener('change', handleImageSelect)
+    }
+
+    if (removeImageBtn) {
+        removeImageBtn.addEventListener('click', clearImagePreview)
     }
 
     form_listener.addEventListener('submit', function (e) {
@@ -122,13 +187,21 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Network error')
         }
 
-        // Send the request
-        console.log('Sending registration request:', { email, full_name: fullName, address })
-        xhr.send(JSON.stringify({
+        // Prepare registration data
+        const registrationData = {
             email,
             password,
             full_name: fullName,
             address
-        }))
+        }
+
+        // Add profile image if one was selected
+        if (profileImageBase64) {
+            registrationData.profilePicture = profileImageBase64
+        }
+
+        // Send the request
+        console.log('Sending registration request:', { email, full_name: fullName, address, hasProfileImage: !!profileImageBase64 })
+        xhr.send(JSON.stringify(registrationData))
     })
 })

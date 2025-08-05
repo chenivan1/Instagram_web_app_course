@@ -27,7 +27,7 @@ const UserController = {
     res.json({ message: 'User deleted', user });
   },
   async registerUser(req, res) {
-    const { email, password, full_name, address } = req.body;
+    const { email, password, full_name, address, profilePicture } = req.body;
     
     // Validate required fields
     if (!email || !password || !full_name || !address) {
@@ -48,6 +48,19 @@ const UserController = {
       return res.status(400).json({ error: 'Longitude must be between -180 and 180 degrees' });
     }
     
+    // Validate profile picture if provided
+    if (profilePicture && typeof profilePicture !== 'string') {
+      return res.status(400).json({ error: 'Profile picture must be a valid base64 string' });
+    }
+    
+    // Validate base64 format if profile picture is provided
+    if (profilePicture) {
+      const base64Regex = /^data:image\/(jpeg|jpg|png|gif|bmp|webp);base64,/;
+      if (!base64Regex.test(profilePicture)) {
+        return res.status(400).json({ error: 'Profile picture must be a valid base64 image (JPEG, PNG, GIF, BMP, or WebP)' });
+      }
+    }
+    
     try {
       // Check if user already exists
       const users = await User.find();
@@ -63,6 +76,7 @@ const UserController = {
         email: email,
         password: password,
         isAdmin: false, // New users are not admins by default
+        profilePicture: profilePicture || null, // Store base64 image or null
         address: {
           name: address.name,
           lat: address.latitude,

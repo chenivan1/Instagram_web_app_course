@@ -9,6 +9,7 @@ let mockUsers = [{
   email: 'john.doe@example.com',
   password: 'password',
   isAdmin: true,
+  profilePicture: null, // Will be defined later
   address: {
     name: "123 Main Street, New York, NY 10001",
     lat: 40.7128,
@@ -21,6 +22,7 @@ let mockUsers = [{
   email: 'jane.doe@example.com',
   password: 'password',
   isAdmin: false,
+  profilePicture: null, // Will be defined later
   address: {
     name: "456 Oak Avenue, Los Angeles, CA 90210",
     lat: 34.0522,
@@ -33,6 +35,7 @@ let mockUsers = [{
   email: 'admin@example.com',
   password: 'admin123',
   isAdmin: true,
+  profilePicture: null, // Will be defined later
   address: {
     name: "789 Admin Street, Chicago, IL 60601",
     lat: 41.8781,
@@ -64,7 +67,11 @@ const UserModel = {
       const result = await db.collection('users').insertOne(data);
       return { _id: result.insertedId, ...data };
     } else {
-      const user = { id: String(Date.now()), ...data };
+      const user = { 
+        id: String(Date.now()), 
+        ...data,
+        profilePicture: data.profilePicture || null // Ensure profilePicture field exists
+      };
       mockUsers.push(user);
       return user;
     }
