@@ -1,6 +1,7 @@
 const Post = require('../models/Post');
 const Community = require('../models/Community');
 const CommunitySubscription = require('../models/CommunitySubscription');
+const User = require('../models/User');
 const SessionManager = require('../sessionManager');
 
 const PostController = {
@@ -57,6 +58,7 @@ const PostController = {
         imageData: imageData,
         authorId: currentUser.id,
         authorName: currentUser.name,
+        authorProfilePicture: currentUser.profilePicture || null,
         communityId: communityId,
         communityName: community.name,
         createdAt: new Date(),
@@ -90,7 +92,14 @@ const PostController = {
       if (myPostsOnly === 'true') {
         // Return only user's own posts
         const posts = await Post.findByAuthor(currentUser.id);
-        return res.json(posts);
+        
+        // Enhance posts with author profile picture (current user's profile picture)
+        const enhancedPosts = posts.map(post => ({
+          ...post,
+          authorProfilePicture: currentUser.profilePicture || null
+        }));
+        
+        return res.json(enhancedPosts);
       }
 
       // Get user's subscribed communities
@@ -100,7 +109,24 @@ const PostController = {
       // Get posts from subscribed communities + user's own posts
       const posts = await Post.findFeedPosts(communityIds, currentUser.id);
 
-      res.json(posts);
+      // Enhance posts with author profile pictures
+      const enhancedPosts = await Promise.all(posts.map(async (post) => {
+        try {
+          const author = await User.findById(post.authorId);
+          return {
+            ...post,
+            authorProfilePicture: author ? author.profilePicture : null
+          };
+        } catch (error) {
+          console.error(`Error fetching author data for post ${post.id}:`, error);
+          return {
+            ...post,
+            authorProfilePicture: null
+          };
+        }
+      }));
+
+      res.json(enhancedPosts);
     } catch (error) {
       console.error('Get home feed error:', error);
       res.status(500).json({ error: 'Internal server error' });

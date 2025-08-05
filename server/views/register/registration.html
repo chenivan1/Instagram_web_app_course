@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Instagram Login</title>
-  <link rel="stylesheet" href="assets/register/registration.css"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/register/registration.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
+
 <body>
   <div class="container d-flex align-items-center justify-content-center min-vh-100">
     <div class="row justify-content-center w-100">
@@ -18,14 +20,13 @@
           <form id="form_login">
             <p>Sign up to see photos and videos from your friends.</p>
             <div class="mb-3">
-              <input id="email" type="email" class="form-control" placeholder="Email" 
-                     pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$"
-                     title="Please enter a valid email address (e.g., user@example.com)" required />
+              <input id="email" type="email" class="form-control" placeholder="Email"
+                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$"
+                title="Please enter a valid email address (e.g., user@example.com)" required />
             </div>
             <div class="mb-3">
-              <input id="password" type="password" class="form-control" placeholder="Password" 
-                     minlength="6" maxlength="12" 
-                     title="Password must be between 6 and 12 characters" required />
+              <input id="password" type="password" class="form-control" placeholder="Password" minlength="6"
+                maxlength="12" title="Password must be between 6 and 12 characters" required />
             </div>
             <div class="mb-3">
               <input id="full_name" type="text" class="form-control" placeholder="Full Name" required />
@@ -39,10 +40,18 @@
             <div class="mb-3">
               <input id="longitude" type="number" step="any" class="form-control" placeholder="Longitude" required />
             </div>
+            <div class="mb-3">
+              <label for="profile_image" class="form-label">Profile Picture (Optional)</label>
+              <input id="profile_image" type="file" class="form-control" accept="image/*" />
+              <div id="image_preview_container" class="mt-2" style="display: none;">
+                <img id="image_preview" src="" alt="Profile Preview" class="profile-preview-img" />
+                <button type="button" id="remove_image" class="btn btn-sm btn-outline-danger mt-2">Remove Image</button>
+              </div>
+            </div>
             <button type="submit" class="btn btn-primary w-100">Sign Up</button>
           </form>
         </div>
-        
+
         <!-- Sign Up Prompt -->
         <div class="card mt-3 text-center p-3">
           <p class="mb-0">have an account? <a href="/login" class="text-primary text-decoration-none">Log in</a></p>
@@ -54,4 +63,5 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/register/registration.js"></script>
 </body>
+
 </html>

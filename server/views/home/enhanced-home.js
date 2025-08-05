@@ -54,6 +54,7 @@ function loadCurrentUser() {
                 try {
                     const response = JSON.parse(xhr.responseText);
                     currentUser = response.user;
+                    updateUserDetails(currentUser);
                 } catch (e) {
                     console.error('Error loading current user:', e);
                 }
@@ -62,6 +63,24 @@ function loadCurrentUser() {
     };
     
     xhr.send();
+}
+
+// Update user details in the top right section
+function updateUserDetails(user) {
+    if (!user) return;
+    
+    const userFullNameElement = document.getElementById('userFullName');
+    const userProfilePictureElement = document.getElementById('userProfilePicture');
+    
+    if (userFullNameElement) {
+        userFullNameElement.textContent = user.name || 'Unknown User';
+    }
+    
+    if (userProfilePictureElement) {
+        // Use user's profile picture if available, otherwise use default
+        userProfilePictureElement.src = user.profilePicture || 'assets/recources/user.jpg';
+        userProfilePictureElement.alt = `${user.name || 'User'}'s Profile Picture`;
+    }
 }
 
 // Setup event listeners
@@ -145,9 +164,12 @@ function createPostElement(post) {
     const timeAgo = getTimeAgo(new Date(post.createdAt));
     const isOwnPost = currentUser && currentUser.id === post.authorId;
     
+    // Use author's profile picture if available, otherwise use default
+    const authorProfilePicture = post.authorProfilePicture || 'assets/recources/user.jpg';
+    
     div.innerHTML = `
         <div class="post-header">
-            <img src="assets/recources/user.jpg" alt="${escapeHtml(post.authorName)}" class="profile-pic">
+            <img src="${authorProfilePicture}" alt="${escapeHtml(post.authorName)}" class="profile-pic">
             <div class="post-user-info">
                 <p class="post-username">${escapeHtml(post.authorName)}
                     <span class="post_time">• ${timeAgo}</span>
