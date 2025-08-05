@@ -117,7 +117,7 @@ body {
 
 .feed-container {
     flex: 1;
-    max-width: 600px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -249,8 +249,7 @@ body.dark-mode {
 .feed-container {
     display: flex;
     flex-direction: column;
-    width: 55%;
-    margin-left: 25%;
+    width: 80%;
     box-sizing: border-box;
     padding: 20px; 
 }
@@ -296,6 +295,36 @@ body.dark-mode {
 /* post style*/
 .posts {
     margin-top: 5px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+/* Individual post styling for grid layout */
+.posts .single-post {
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 20px;
+}
+
+.posts .single-post:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode support for posts grid */
+.dark-mode .posts .single-post {
+    background: #1e1e1e;
+    border-color: #444;
+}
+
+.dark-mode .posts .single-post:hover {
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
 }
 
 .post-header {
@@ -329,10 +358,12 @@ body.dark-mode {
 }
 
 .post-image {
-    width: 480px;
-    height: 600px;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
     align-items: center;
     margin-top: 10px;
+    border-radius: 8px;
 }
 
 .post-actions {
@@ -984,6 +1015,16 @@ body.dark-mode {
 
 /* Responsive Improvements */
 @media (max-width: 768px) {
+    /* Posts grid responsive - 2 columns on tablets */
+    .posts {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .post-image {
+        height: 250px;
+    }
+    
     .post-title {
         padding: 10px 12px;
         font-size: 13px;
@@ -1143,5 +1184,26 @@ body.dark-mode {
     .search-buttons .btn-sm {
         width: 100%;
         margin-bottom: 8px;
+    }
+}
+
+/* Mobile responsive - single column for very small screens */
+@media (max-width: 480px) {
+    .posts {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .post-image {
+        height: 300px;
+    }
+    
+    .post-header {
+        padding: 8px;
+    }
+    
+    .post-actions {
+        padding: 8px;
+        gap: 8px;
     }
 }
