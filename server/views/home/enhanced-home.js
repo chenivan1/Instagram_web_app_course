@@ -199,8 +199,8 @@ function createPostElement(post) {
             <button class="action-btn comment-btn" onclick="toggleComments('${post.id}')">
                 <img src="assets/recources/comment.png" alt="Comment">
             </button>
-            <button class="action-btn share-btn" onclick="sharePost('${post.id}')">
-                <img src="assets/recources/messages-removebg.png" alt="Share">
+            <button class="action-btn share-btn" onclick="sharePost('${post.id}')" title="Share on Facebook">
+                <img src="assets/recources/facebook.png" alt="Share on Facebook">
             </button>
         </div>
         
@@ -478,12 +478,34 @@ function getLatestCommentHtml(post) {
 }
 
 function sharePost(postId) {
-    // Use existing share modal if available
-    const shareModal = document.getElementById('shareModal');
-    if (shareModal) {
-        shareModal.style.display = 'block';
+    // Find the post data
+    const post = currentFeedPosts.find(p => p.id === postId);
+    if (!post) {
+        showAlert('Post not found', 'error');
+        return;
+    }
+    
+    // Create Facebook share URL
+    const postTitle = post.title || `Check out this post by ${post.authorName}`;
+    const postDescription = `Posted in ${post.communityName} community`;
+    const postImage = post.imageData;
+    const currentPageUrl = window.location.href;
+    
+    // Facebook share URL with parameters
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentPageUrl)}&quote=${encodeURIComponent(postTitle + ' - ' + postDescription)}`;
+    
+    // Open Facebook share in a new window
+    const shareWindow = window.open(
+        facebookShareUrl,
+        'facebook-share-dialog',
+        'width=626,height=436,resizable=yes,scrollbars=yes'
+    );
+    
+    // Show success message
+    if (shareWindow) {
+        showAlert('Opening Facebook share dialog...', 'success');
     } else {
-        showAlert('Share functionality coming soon!', 'info');
+        showAlert('Please allow popups to share on Facebook', 'warning');
     }
 }
 
@@ -757,20 +779,3 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTheme();
 });
 
-// Handle share modal (from original)
-document.addEventListener('DOMContentLoaded', function() {
-    const shareModal = document.getElementById('shareModal');
-    const closeBtn = shareModal ? shareModal.querySelector('.close-btn') : null;
-    
-    if (closeBtn && shareModal) {
-        closeBtn.addEventListener('click', function() {
-            shareModal.style.display = 'none';
-        });
-        
-        window.addEventListener('click', function(event) {
-            if (event.target === shareModal) {
-                shareModal.style.display = 'none';
-            }
-        });
-    }
-});
