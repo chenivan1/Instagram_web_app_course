@@ -21,4 +21,8 @@ router.delete('/:id/unsubscribe', authMiddleware.requireAuth, SubscriptionContro
 router.get('/:id/subscription-status', authMiddleware.requireAuth, SubscriptionController.checkSubscriptionStatus);
 router.get('/:id/subscribers', authMiddleware.requireAuth, CommunityController.getCommunitySubscribers);
 
+// Community statistics routes
+router.get('/statistics/page', authMiddleware.requireAuth, CommunityController.renderStatisticsPage);
+router.get('/statistics/post-activity', authMiddleware.requireAuth, CommunityController.getPostActivityStats);
+
 module.exports = router;

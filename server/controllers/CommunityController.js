@@ -189,6 +189,65 @@ const CommunityController = {
       console.error('Get community subscribers error:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
+  },
+
+  // Render community statistics page
+  async renderStatisticsPage(req, res) {
+    try {
+      res.sendFile(path.join(__dirname, '../views/communities/statistics.html'));
+    } catch (error) {
+      console.error('Render statistics page error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
+  // Get post activity statistics for managed communities
+  async getPostActivityStats(req, res) {
+    try {
+      const currentUser = SessionManager.getLoggedInUser();
+      if (!currentUser) {
+        return res.status(401).json({ error: 'Not authenticated' });
+      }
+
+      const Post = require('../models/Post');
+
+      // Get user's managed communities
+      const managedCommunities = await Community.find();
+      const userManagedCommunities = managedCommunities.filter(c => c.managerId === currentUser.id);
+
+      if (userManagedCommunities.length === 0) {
+        return res.json([]);
+      }
+
+      const communityIds = userManagedCommunities.map(c => c.id);
+
+      // Use model aggregation method
+      const aggregationResult = await Post.getPostActivityStats(communityIds);
+      
+      // Process aggregation result
+      const activityStats = userManagedCommunities.map(community => {
+        const stats = aggregationResult.find(item => item._id === community.id) || {
+          totalPosts: 0,
+          totalLikes: 0,
+          totalComments: 0
+        };
+        
+        return {
+          communityId: community.id,
+          communityName: community.name,
+          totalPosts: stats.totalPosts,
+          totalLikes: stats.totalLikes,
+          totalComments: stats.totalComments,
+          avgLikesPerPost: stats.totalPosts > 0 ? (stats.totalLikes / stats.totalPosts).toFixed(1) : 0,
+          avgCommentsPerPost: stats.totalPosts > 0 ? (stats.totalComments / stats.totalPosts).toFixed(1) : 0
+        };
+      });
+
+      res.json(activityStats);
+    } catch (error) {
+      console.error('Get post activity stats error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 };
 
