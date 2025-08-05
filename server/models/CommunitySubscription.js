@@ -3,7 +3,79 @@ const connectDB = require('../db');
 
 const useDb = false; // Following existing pattern
 
-let mockSubscriptions = [];
+let mockSubscriptions = [
+  // John Doe subscriptions
+  {
+    id: '1',
+    userId: '1',
+    communityId: '1', // Tech Enthusiasts (he manages this)
+    subscribedAt: new Date('2024-01-01')
+  },
+  {
+    id: '2',
+    userId: '1',
+    communityId: '2', // Photography Club
+    subscribedAt: new Date('2024-01-02')
+  },
+  {
+    id: '3',
+    userId: '1',
+    communityId: '3', // Food & Recipes
+    subscribedAt: new Date('2024-01-03')
+  },
+  
+  // Jane Doe subscriptions
+  {
+    id: '4',
+    userId: '2',
+    communityId: '1', // Tech Enthusiasts
+    subscribedAt: new Date('2024-01-01')
+  },
+  {
+    id: '5',
+    userId: '2',
+    communityId: '2', // Photography Club (she manages this)
+    subscribedAt: new Date('2024-01-02')
+  },
+  {
+    id: '6',
+    userId: '2',
+    communityId: '4', // Travel Adventures
+    subscribedAt: new Date('2024-01-04')
+  },
+  
+  // Admin User subscriptions
+  {
+    id: '7',
+    userId: '3',
+    communityId: '1', // Tech Enthusiasts
+    subscribedAt: new Date('2024-01-01')
+  },
+  {
+    id: '8',
+    userId: '3',
+    communityId: '2', // Photography Club
+    subscribedAt: new Date('2024-01-02')
+  },
+  {
+    id: '9',
+    userId: '3',
+    communityId: '3', // Food & Recipes (he manages this)
+    subscribedAt: new Date('2024-01-03')
+  },
+  {
+    id: '10',
+    userId: '3',
+    communityId: '4', // Travel Adventures
+    subscribedAt: new Date('2024-01-04')
+  },
+  {
+    id: '11',
+    userId: '3',
+    communityId: '5', // Fitness & Health
+    subscribedAt: new Date('2024-01-05')
+  }
+];
 
 const CommunitySubscriptionModel = {
   async find(query = {}) {
