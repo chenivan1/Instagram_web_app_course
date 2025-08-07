@@ -1,4 +1,5 @@
 const connectDB = require('../db');
+const { ObjectId } = require('mongodb');
 
 const useDb = process.env.USE_DB === 'true';
 
@@ -54,7 +55,11 @@ const CommunityModel = {
   async find() {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('communities').find().toArray();
+      const communities = await db.collection('communities').find().toArray();
+      return communities.map(community => ({
+        ...community,
+        id: community._id.toString()
+      }));
     } else {
       return mockCommunities;
     }
@@ -63,7 +68,29 @@ const CommunityModel = {
   async findById(id) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('communities').findOne({ id: id });
+      let community;
+      
+      // Try to find by _id first (for MongoDB ObjectId)
+      try {
+        if (ObjectId.isValid(id)) {
+          community = await db.collection('communities').findOne({ _id: new ObjectId(id) });
+        }
+      } catch (error) {
+        // If ObjectId conversion fails, try as string
+      }
+      
+      // If not found by _id, try by custom id field
+      if (!community) {
+        community = await db.collection('communities').findOne({ id: id });
+      }
+      
+      if (community) {
+        return {
+          ...community,
+          id: community._id.toString()
+        };
+      }
+      return null;
     } else {
       return mockCommunities.find(c => c.id === id);
     }
@@ -72,7 +99,14 @@ const CommunityModel = {
   async findByName(name) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('communities').findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
+      const community = await db.collection('communities').findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
+      if (community) {
+        return {
+          ...community,
+          id: community._id.toString()
+        };
+      }
+      return null;
     } else {
       return mockCommunities.find(c => c.name.toLowerCase() === name.toLowerCase());
     }
@@ -81,8 +115,17 @@ const CommunityModel = {
   async create(data) {
     if (useDb) {
       const db = await connectDB();
-      const result = await db.collection('communities').insertOne(data);
-      return { _id: result.insertedId, ...data };
+      const communityData = {
+        ...data,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      const result = await db.collection('communities').insertOne(communityData);
+      return { 
+        _id: result.insertedId, 
+        ...communityData,
+        id: result.insertedId.toString()
+      };
     } else {
       const community = { 
         id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`, 
@@ -103,7 +146,13 @@ const CommunityModel = {
         { $set: { ...data, updatedAt: new Date() } },
         { returnDocument: 'after' }
       );
-      return result;
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const idx = mockCommunities.findIndex(c => c.id === id);
       if (idx === -1) return null;
@@ -120,7 +169,13 @@ const CommunityModel = {
     if (useDb) {
       const db = await connectDB();
       const result = await db.collection('communities').findOneAndDelete({ id: id });
-      return result;
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const idx = mockCommunities.findIndex(c => c.id === id);
       if (idx === -1) return null;

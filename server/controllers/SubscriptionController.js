@@ -92,18 +92,40 @@ const SubscriptionController = {
 
     try {
       const subscriptions = await CommunitySubscription.getUserSubscriptions(currentUser.id);
+      console.log(`Found ${subscriptions.length} subscriptions for user ${currentUser.id}:`, subscriptions.map(s => ({id: s.id, communityId: s.communityId})));
       
       // Get full community details for each subscription
       const communities = await Community.find();
-      const subscribedCommunities = subscriptions.map(sub => {
-        const community = communities.find(c => c.id === sub.communityId);
-        return {
-          ...community,
-          subscribedAt: sub.subscribedAt
-        };
-      }).filter(Boolean); // Remove null entries if community was deleted
+      console.log(`Found ${communities.length} communities:`, communities.map(c => ({id: c.id, name: c.name})));
+      
+      const subscribedCommunities = await Promise.all(
+        subscriptions.map(async sub => {
+          let community = communities.find(c => c.id === sub.communityId);
+          
+          // If community not found in the bulk fetch, try to find it individually
+          if (!community) {
+            console.warn(`Community not found in bulk fetch for subscription: ${sub.communityId}, trying individual lookup`);
+            community = await Community.findById(sub.communityId);
+          }
+          
+          if (!community) {
+            console.warn(`Community not found even with individual lookup: ${sub.communityId}`);
+            return null;
+          }
+          
+          console.log(`Mapping subscription ${sub.id} to community:`, {id: community.id, name: community.name});
+          return {
+            ...community,
+            subscribedAt: sub.subscribedAt
+          };
+        })
+      );
+      
+      // Filter out null entries
+      const validSubscribedCommunities = subscribedCommunities.filter(Boolean);
 
-      res.json(subscribedCommunities);
+      console.log(`Returning ${validSubscribedCommunities.length} subscribed communities:`, validSubscribedCommunities.map(c => ({id: c.id, name: c.name})));
+      res.json(validSubscribedCommunities);
     } catch (error) {
       console.error('Get user subscriptions error:', error);
       res.status(500).json({ error: 'Internal server error' });

@@ -926,9 +926,82 @@ body.dark-mode {
     border: none;
     color: #0095f6;
     font-weight: 600;
-    font-size: 14px;
     cursor: pointer;
     padding: 8px 12px;
+}
+
+.comment-submit-btn:hover {
+    color: #0056b3;
+}
+
+/* Comment Edit Styles */
+.comment-edit-form {
+    margin-top: 8px;
+}
+
+.comment-edit-input {
+    width: 100%;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #262626;
+    background: #ffffff;
+    outline: none;
+}
+
+.dark-theme .comment-edit-input {
+    background: #1a1a1a;
+    border-color: #333;
+    color: #ffffff;
+}
+
+.comment-edit-input:focus {
+    border-color: #0095f6;
+}
+
+.comment-edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.comment-edit-save-btn,
+.comment-edit-cancel-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.comment-edit-save-btn {
+    background: #0095f6;
+    color: white;
+}
+
+.comment-edit-save-btn:hover {
+    background: #0056b3;
+}
+
+.comment-edit-cancel-btn {
+    background: #efefef;
+    color: #262626;
+}
+
+.comment-edit-cancel-btn:hover {
+    background: #dbdbdb;
+}
+
+.dark-theme .comment-edit-cancel-btn {
+    background: #333;
+    color: #ffffff;
+}
+
+.dark-theme .comment-edit-cancel-btn:hover {
+    background: #555;
+}
 }
 
 .comment-submit-btn:hover {

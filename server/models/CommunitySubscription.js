@@ -1,4 +1,5 @@
 const connectDB = require('../db');
+const { ObjectId } = require('mongodb');
 
 const useDb = process.env.USE_DB === 'true';
 
@@ -80,7 +81,11 @@ const CommunitySubscriptionModel = {
   async find(query = {}) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('community_subscriptions').find(query).toArray();
+      const subscriptions = await db.collection('community_subscriptions').find(query).toArray();
+      return subscriptions.map(sub => ({
+        ...sub,
+        id: sub._id.toString()
+      }));
     } else {
       if (Object.keys(query).length === 0) {
         return mockSubscriptions;
@@ -96,10 +101,17 @@ const CommunitySubscriptionModel = {
   async findByUserAndCommunity(userId, communityId) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('community_subscriptions').findOne({ 
+      const subscription = await db.collection('community_subscriptions').findOne({ 
         userId: userId, 
         communityId: communityId 
       });
+      if (subscription) {
+        return {
+          ...subscription,
+          id: subscription._id.toString()
+        };
+      }
+      return null;
     } else {
       return mockSubscriptions.find(sub => 
         sub.userId === userId && sub.communityId === communityId
@@ -110,7 +122,11 @@ const CommunitySubscriptionModel = {
   async getUserSubscriptions(userId) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('community_subscriptions').find({ userId: userId }).toArray();
+      const subscriptions = await db.collection('community_subscriptions').find({ userId: userId }).toArray();
+      return subscriptions.map(sub => ({
+        ...sub,
+        id: sub._id.toString()
+      }));
     } else {
       return mockSubscriptions.filter(sub => sub.userId === userId);
     }
@@ -119,7 +135,11 @@ const CommunitySubscriptionModel = {
   async getCommunitySubscribers(communityId) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('community_subscriptions').find({ communityId: communityId }).toArray();
+      const subscriptions = await db.collection('community_subscriptions').find({ communityId: communityId }).toArray();
+      return subscriptions.map(sub => ({
+        ...sub,
+        id: sub._id.toString()
+      }));
     } else {
       return mockSubscriptions.filter(sub => sub.communityId === communityId);
     }
@@ -128,8 +148,17 @@ const CommunitySubscriptionModel = {
   async create(data) {
     if (useDb) {
       const db = await connectDB();
-      const result = await db.collection('community_subscriptions').insertOne(data);
-      return { _id: result.insertedId, ...data };
+      const subscriptionData = {
+        ...data,
+        id: new ObjectId().toString(),
+        subscribedAt: new Date()
+      };
+      const result = await db.collection('community_subscriptions').insertOne(subscriptionData);
+      return { 
+        _id: result.insertedId, 
+        ...subscriptionData,
+        id: result.insertedId.toString()
+      };
     } else {
       const subscription = { 
         id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`, 
@@ -148,7 +177,13 @@ const CommunitySubscriptionModel = {
         userId: userId, 
         communityId: communityId 
       });
-      return result;
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const idx = mockSubscriptions.findIndex(sub => 
         sub.userId === userId && sub.communityId === communityId

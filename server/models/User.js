@@ -131,7 +131,11 @@ const UserModel = {
   async find() {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('users').find().toArray();
+      const users = await db.collection('users').find().toArray();
+      return users.map(user => ({
+        ...user,
+        id: user._id.toString()
+      }));
     } else {
       return mockUsers;
     }
@@ -139,7 +143,14 @@ const UserModel = {
   async findById(id) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('users').findOne({ id: id });
+      const user = await db.collection('users').findOne({ id: id });
+      if (user) {
+        return {
+          ...user,
+          id: user._id.toString()
+        };
+      }
+      return null;
     } else {
       return mockUsers.find(u => u.id === id);
     }
@@ -178,7 +189,13 @@ const UserModel = {
         { $set: data },
         { returnDocument: 'after' }
       );
-      return result;
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const idx = mockUsers.findIndex(u => u.id === id);
       if (idx === -1) return null;
@@ -190,7 +207,13 @@ const UserModel = {
     if (useDb) {
       const db = await connectDB();
       const result = await db.collection('users').findOneAndDelete({ id: id });
-      return result;
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const idx = mockUsers.findIndex(u => u.id === id);
       if (idx === -1) return null;

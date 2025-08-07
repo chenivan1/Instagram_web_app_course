@@ -531,6 +531,45 @@ function displayComments(postId, comments) {
     }).join('');
 }
 
+// Edit comment functionality
+function editComment(postId, commentId, currentText) {
+    const commentTextElement = document.getElementById(`comment-text-${commentId}`);
+    if (!commentTextElement) return;
+    
+    // Hide the comment text and show edit form
+    const commentContainer = commentTextElement.parentElement;
+    commentTextElement.style.display = 'none';
+    
+    // Create edit form if it doesn't exist
+    let editForm = document.getElementById(`edit-form-${commentId}`);
+    if (!editForm) {
+        editForm = document.createElement('div');
+        editForm.id = `edit-form-${commentId}`;
+        editForm.className = 'comment-edit-form';
+        editForm.innerHTML = `
+            <input type="text" id="edit-input-${commentId}" class="comment-edit-input" value="${escapeHtml(currentText)}" maxlength="500">
+            <div class="comment-edit-actions">
+                <button class="comment-edit-save-btn" onclick="saveCommentEdit('${postId}', '${commentId}')">Save</button>
+                <button class="comment-edit-cancel-btn" onclick="cancelCommentEdit('${commentId}')">Cancel</button>
+            </div>
+        `;
+        commentContainer.appendChild(editForm);
+    } else {
+        editForm.style.display = 'block';
+        const editInput = document.getElementById(`edit-input-${commentId}`);
+        if (editInput) {
+            editInput.value = currentText;
+        }
+    }
+    
+    // Focus on the input
+    const editInput = document.getElementById(`edit-input-${commentId}`);
+    if (editInput) {
+        editInput.focus();
+        editInput.select();
+    }
+}
+
 // Add new comment
 function addComment(postId) {
     const commentInput = document.querySelector(`#comments-${postId} .comment-input`);
@@ -573,15 +612,39 @@ function handleCommentKeyPress(event, postId) {
 
 // Update latest comment display
 function updateLatestComment(postId, comment) {
-    const latestCommentSection = document.querySelector(`[data-post-id="${postId}"]`).closest('.single-post').querySelector('.latest-comment');
+    const postElement = document.querySelector(`[data-post-id="${postId}"]`).closest('.single-post');
+    const latestCommentSection = postElement.querySelector('.latest-comment');
+    
     if (latestCommentSection && comment) {
         const timeAgo = getTimeAgo(new Date(comment.createdAt));
+        
+        // Get current comment count by checking if comments are loaded
+        const commentsList = document.getElementById(`comments-list-${postId}`);
+        let commentCount = 1; // At least 1 (the new comment)
+        
+        if (commentsList) {
+            const existingComments = commentsList.querySelectorAll('.comment');
+            commentCount = existingComments.length;
+        }
+        
+        // Update the post data in currentFeedPosts to keep it in sync
+        const postIndex = currentFeedPosts.findIndex(p => p.id === postId);
+        if (postIndex !== -1) {
+            if (!currentFeedPosts[postIndex].comments) {
+                currentFeedPosts[postIndex].comments = [];
+            }
+            // Add the new comment to the post data
+            currentFeedPosts[postIndex].comments.push(comment);
+            commentCount = currentFeedPosts[postIndex].comments.length;
+        }
+        
         latestCommentSection.innerHTML = `
             <div class="latest-comment-content">
                 <span class="latest-comment-author">${escapeHtml(comment.authorName)}</span>
                 <span class="latest-comment-text">${escapeHtml(comment.text)}</span>
                 <span class="latest-comment-time">${timeAgo}</span>
             </div>
+            ${commentCount > 1 ? `<button class="view-all-comments" onclick="toggleComments('${postId}')">View all ${commentCount} comments</button>` : ''}
         `;
         latestCommentSection.style.display = 'block';
     }
@@ -741,6 +804,12 @@ function deleteComment(postId, commentId) {
 function updateLatestCommentAfterDelete(postId, post) {
     const latestCommentSection = document.querySelector(`[data-post-id="${postId}"] .latest-comment`);
     if (latestCommentSection) {
+        // Update the post data in currentFeedPosts to keep it in sync
+        const postIndex = currentFeedPosts.findIndex(p => p.id === postId);
+        if (postIndex !== -1) {
+            currentFeedPosts[postIndex].comments = post.comments || [];
+        }
+        
         if (post.comments.length === 0) {
             latestCommentSection.style.display = 'none';
         } else {
