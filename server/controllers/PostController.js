@@ -453,6 +453,7 @@ const PostController = {
       // Toggle like
       const updatedPost = await Post.toggleLike(id, currentUser.id);
       if (!updatedPost) {
+        console
         return res.status(404).json({ error: 'Post not found' });
       }
 
