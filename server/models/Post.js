@@ -10,7 +10,7 @@ let mockPosts = [
     imageData: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
     authorId: '1',
     authorName: 'John Doe',
-    authorProfilePicture: null,
+    authorProfilePicture: 'assets/recources/chandler.jpg',
     communityId: '1',
     communityName: 'Tech Enthusiasts',
     likes: ['2', '3'],
@@ -21,7 +21,7 @@ let mockPosts = [
         text: 'This is fascinating! Thanks for sharing.',
         authorId: '2',
         authorName: 'Jane Doe',
-        authorProfilePicture: null,
+        authorProfilePicture: 'assets/recources/rachel.jpg',
         createdAt: new Date('2024-01-15T10:30:00Z')
       }
     ],
@@ -34,7 +34,7 @@ let mockPosts = [
     imageData: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
     authorId: '2',
     authorName: 'Jane Doe',
-    authorProfilePicture: null,
+    authorProfilePicture: 'assets/recources/rachel.jpg',
     communityId: '2',
     communityName: 'Photography Club',
     likes: ['1'],
@@ -49,7 +49,7 @@ let mockPosts = [
     imageData: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
     authorId: '3',
     authorName: 'Admin User',
-    authorProfilePicture: null,
+    authorProfilePicture: 'assets/recources/prof1.jpg',
     communityId: '3',
     communityName: 'Food & Recipes',
     likes: ['1', '2'],
@@ -60,7 +60,7 @@ let mockPosts = [
         text: 'Looks delicious! What type of flour did you use?',
         authorId: '1',
         authorName: 'John Doe',
-        authorProfilePicture: null,
+        authorProfilePicture: 'assets/recources/chandler.jpg',
         createdAt: new Date('2024-01-13T15:45:00Z')
       },
       {
@@ -68,7 +68,7 @@ let mockPosts = [
         text: 'I used 00 flour for the best texture!',
         authorId: '3',
         authorName: 'Admin User',
-        authorProfilePicture: null,
+        authorProfilePicture: 'assets/recources/prof1.jpg',
         createdAt: new Date('2024-01-13T16:00:00Z')
       }
     ],
@@ -81,7 +81,7 @@ let mockPosts = [
     imageData: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
     authorId: '1',
     authorName: 'John Doe',
-    authorProfilePicture: null,
+    authorProfilePicture: 'assets/recources/chandler.jpg',
     communityId: '4',
     communityName: 'Travel Adventures',
     likes: ['2', '3'],
@@ -96,7 +96,7 @@ let mockPosts = [
     imageData: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
     authorId: '2',
     authorName: 'Jane Doe',
-    authorProfilePicture: null,
+    authorProfilePicture: 'assets/recources/rachel.jpg',
     communityId: '5',
     communityName: 'Fitness & Health',
     likes: ['3'],
@@ -107,7 +107,7 @@ let mockPosts = [
         text: 'Great routine! How long does it take?',
         authorId: '3',
         authorName: 'Admin User',
-        authorProfilePicture: null,
+        authorProfilePicture: 'assets/recources/prof1.jpg',
         createdAt: new Date('2024-01-11T07:15:00Z')
       }
     ],
@@ -120,7 +120,7 @@ let mockPosts = [
     imageData: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
     authorId: '3',
     authorName: 'Admin User',
-    authorProfilePicture: null,
+    authorProfilePicture: 'assets/recources/prof1.jpg',
     communityId: '1',
     communityName: 'Tech Enthusiasts',
     likes: ['1'],
@@ -135,7 +135,7 @@ let mockPosts = [
     imageData: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
     authorId: '1',
     authorName: 'John Doe',
-    authorProfilePicture: null,
+    authorProfilePicture: 'assets/recources/chandler.jpg',
     communityId: '2',
     communityName: 'Photography Club',
     likes: ['2'],
@@ -150,7 +150,7 @@ let mockPosts = [
     imageData: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
     authorId: '2',
     authorName: 'Jane Doe',
-    authorProfilePicture: null,
+    authorProfilePicture: 'assets/recources/rachel.jpg',
     communityId: '3',
     communityName: 'Food & Recipes',
     likes: ['1', '3'],
@@ -161,7 +161,7 @@ let mockPosts = [
         text: 'What fruits did you use? Looks amazing!',
         authorId: '1',
         authorName: 'John Doe',
-        authorProfilePicture: null,
+        authorProfilePicture: 'assets/recources/chandler.jpg',
         createdAt: new Date('2024-01-08T09:30:00Z')
       }
     ],

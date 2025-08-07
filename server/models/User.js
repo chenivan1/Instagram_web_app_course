@@ -20,7 +20,7 @@ let mockUsers = [{
   email: 'john.doe@example.com',
   password: 'password',
   isAdmin: true,
-  profilePicture: null, // Will be defined later
+  profilePicture: 'assets/recources/chandler.jpg',
   address: {
     name: "123 Main Street, New York, NY 10001",
     lat: 40.7128,
@@ -34,7 +34,7 @@ let mockUsers = [{
   email: 'jane.doe@example.com',
   password: 'password',
   isAdmin: false,
-  profilePicture: null, // Will be defined later
+  profilePicture: 'assets/recources/rachel.jpg',
   address: {
     name: "456 Oak Avenue, Los Angeles, CA 90210",
     lat: 34.0522,
@@ -48,7 +48,7 @@ let mockUsers = [{
   email: 'admin@example.com',
   password: 'admin123',
   isAdmin: true,
-  profilePicture: null, // Will be defined later
+  profilePicture: 'assets/recources/prof1.jpg',
   address: {
     name: "789 Admin Street, Chicago, IL 60601",
     lat: 41.8781,
@@ -62,7 +62,7 @@ let mockUsers = [{
   email: 'alice.johnson@example.com',
   password: 'password123',
   isAdmin: false,
-  profilePicture: null,
+  profilePicture: 'assets/recources/phoebe.jpg',
   address: {
     name: "101 Pine Street, San Francisco, CA 94102",
     lat: 37.7749,
@@ -76,7 +76,7 @@ let mockUsers = [{
   email: 'bob.wilson@example.com',
   password: 'password123',
   isAdmin: false,
-  profilePicture: null,
+  profilePicture: 'assets/recources/joey.jpg',
   address: {
     name: "202 Elm Avenue, Austin, TX 78701",
     lat: 30.2672,
@@ -90,7 +90,7 @@ let mockUsers = [{
   email: 'carol.davis@example.com',
   password: 'password123',
   isAdmin: false,
-  profilePicture: null,
+  profilePicture: 'assets/recources/prof2.jpg',
   address: {
     name: "303 Maple Drive, Seattle, WA 98101",
     lat: 47.6062,
@@ -104,7 +104,7 @@ let mockUsers = [{
   email: 'david.brown@example.com',
   password: 'password123',
   isAdmin: false,
-  profilePicture: null,
+  profilePicture: 'assets/recources/prof3.jpg',
   address: {
     name: "404 Cedar Lane, Miami, FL 33101",
     lat: 25.7617,
@@ -118,7 +118,7 @@ let mockUsers = [{
   email: 'emma.garcia@example.com',
   password: 'password123',
   isAdmin: false,
-  profilePicture: null,
+  profilePicture: 'assets/recources/prof4.jpg',
   address: {
     name: "505 Birch Road, Denver, CO 80201",
     lat: 39.7392,

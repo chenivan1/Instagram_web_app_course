@@ -591,7 +591,30 @@ const PostController = {
 
       // Get comments sorted by date (newest first)
       const comments = await Post.getComments(id);
-      const sortedComments = comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
+      // Enhance comments with author profile pictures for those that don't have them
+      const enhancedComments = await Promise.all(comments.map(async (comment) => {
+        // If comment already has authorProfilePicture, use it; otherwise fetch from user data
+        if (comment.authorProfilePicture) {
+          return comment;
+        }
+        
+        try {
+          const author = await User.findById(comment.authorId);
+          return {
+            ...comment,
+            authorProfilePicture: author ? author.profilePicture : null
+          };
+        } catch (error) {
+          console.error(`Error fetching author data for comment ${comment.id}:`, error);
+          return {
+            ...comment,
+            authorProfilePicture: null
+          };
+        }
+      }));
+      
+      const sortedComments = enhancedComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
       res.json({
         success: true,
