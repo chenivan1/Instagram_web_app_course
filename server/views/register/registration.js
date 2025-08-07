@@ -144,11 +144,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     try {
                         const data = JSON.parse(xhr.responseText)
                         if (data.success) {
-                            // Registration successful
-                            showMessage('Registration successful! Redirecting to login...', false)
-                            // Redirect to login page after a short delay
+                            // Registration successful - user is now automatically logged in
+                            showMessage('Registration successful! Redirecting to home...', false)
+                            // Redirect to home page after a short delay
                             setTimeout(() => {
-                                window.location.href = "/login"
+                                window.location.href = "/home"
                             }, 1500)
                         } else {
                             // Registration failed

@@ -88,6 +88,9 @@ const UserController = {
       // Create the user
       const newUser = await User.create(userData);
       
+      // Automatically log in the user after successful registration
+      SessionManager.setLoggedInUser(newUser);
+      
       // Return user data without password
       const { password: _, ...userWithoutPassword } = newUser;
       res.status(201).json({ 
