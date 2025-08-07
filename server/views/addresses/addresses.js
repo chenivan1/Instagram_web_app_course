@@ -223,9 +223,41 @@ function handleLogout() {
     }
 }
 
+// Check admin access and show/hide manage users button
+function checkAdminAccess() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '/user/current', true);
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.user && response.user.isAdmin) {
+                        const manageUsersBtn = document.querySelector('.sidebar_btn[onclick*="user-management"]');
+                        if (manageUsersBtn) {
+                            manageUsersBtn.style.display = 'block';
+                        }
+                    } else {
+                        const manageUsersBtn = document.querySelector('.sidebar_btn[onclick*="user-management"]');
+                        if (manageUsersBtn) {
+                            manageUsersBtn.style.display = 'none';
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error parsing admin check response:', e);
+                }
+            }
+        }
+    };
+    
+    xhr.send();
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     loadGoogleMapsAPI();
+    checkAdminAccess();
     
     // Attach logout button event listener
     const logoutBtn = document.getElementById('logout-btn');
