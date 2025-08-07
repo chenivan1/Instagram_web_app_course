@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const connectDB = require('../db');
 
-const useDb = false; // Following existing pattern in User.js
+const useDb = process.env.USE_DB === 'true';
 
 let mockCommunities = [
   {

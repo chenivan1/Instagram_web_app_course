@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const { seedDatabase, isDatabaseEmpty } = require('./seedDatabase');
 const userRoutes = require('./routes/userRoutes');
 const newsRoutes = require('./routes/newsRoutes');
 const addressesRoutes = require('./routes/addressesRoutes');
@@ -75,6 +76,39 @@ app.get('/', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
+  
+  // Check if we should seed the database with mock data
+  const SEED_DATABASE = process.env.SEED_DATABASE === 'true';
+  const USE_DB = process.env.USE_DB === 'true';
+  
+  if (SEED_DATABASE && USE_DB) {
+    try {
+      console.log('🔍 Checking if database needs seeding...');
+      const isEmpty = await isDatabaseEmpty();
+      
+      if (isEmpty) {
+        console.log('📊 Database is empty, seeding with mock data...');
+        const result = await seedDatabase(false); // Don't clear since it's already empty
+        console.log('✅ Database seeded successfully:', result.summary);
+      } else {
+        console.log('📊 Database already contains data, skipping seeding.');
+        console.log('💡 To force re-seeding, set FORCE_SEED=true in environment variables.');
+      }
+      
+      // Force seeding if explicitly requested
+      if (process.env.FORCE_SEED === 'true') {
+        console.log('🔄 Force seeding requested, clearing and re-seeding database...');
+        const result = await seedDatabase(true);
+        console.log('✅ Database force-seeded successfully:', result.summary);
+      }
+      
+    } catch (error) {
+      console.error('❌ Failed to seed database:', error.message);
+      console.log('⚠️  Server will continue running, but database may be empty.');
+    }
+  } else if (SEED_DATABASE && !USE_DB) {
+    console.log('⚠️  SEED_DATABASE is enabled but USE_DB is false. Seeding only works with MongoDB.');
+  }
 }); 
