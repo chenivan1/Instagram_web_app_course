@@ -66,13 +66,15 @@ const CommunityController = {
       };
 
       const newCommunity = await Community.create(communityData);
+      console.log('Created new community:', {id: newCommunity.id, name: newCommunity.name});
 
       // Auto-subscribe the manager to their own community
-      await CommunitySubscription.create({
+      const subscription = await CommunitySubscription.create({
         userId: currentUser.id,
         communityId: newCommunity.id,
         subscribedAt: new Date()
       });
+      console.log('Created subscription:', {id: subscription.id, userId: subscription.userId, communityId: subscription.communityId});
 
       res.status(201).json({
         message: 'Community created successfully',

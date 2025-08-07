@@ -112,6 +112,7 @@ function loadSubscribedCommunities() {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 subscribedCommunities = JSON.parse(xhr.responseText);
+                console.log('Subscribed communities data:', subscribedCommunities);
                 displayCommunities(subscribedCommunities, subscribedCommunitiesList, 'subscribed');
             } else {
                 showError(subscribedCommunitiesList, 'Failed to load subscribed communities');
@@ -165,8 +166,8 @@ function createCommunityCard(community, type) {
     div.innerHTML = `
         <div class="community-card">
             <div class="community-info">
-                <div class="community-name">${escapeHtml(community.name)}</div>
-                <div class="community-manager">Managed by ${escapeHtml(community.managerName)}</div>
+                <div class="community-name">${escapeHtml(community.name || 'Unknown Community')}</div>
+                <div class="community-manager">Managed by ${escapeHtml(community.managerName || 'Unknown Manager')}</div>
                 ${community.description ? `<div class="community-description">${escapeHtml(community.description)}</div>` : ''}
             </div>
             <div class="community-actions">
@@ -310,8 +311,11 @@ function createCommunity() {
                     userSubscriptions.add(result.community.id);
                     
                     // Also refresh subscription tabs to show the new community
-                    loadSubscribedCommunities();
-                    loadManagedCommunities();
+                    // Add a small delay to ensure the community is fully created
+                    setTimeout(() => {
+                        loadSubscribedCommunities();
+                        loadManagedCommunities();
+                    }, 100);
                 } catch (e) {
                     console.error('Error parsing success response:', e);
                     showAlert('Community created but failed to update display', 'warning');

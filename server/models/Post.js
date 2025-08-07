@@ -1,4 +1,5 @@
 const connectDB = require('../db');
+const { ObjectId } = require('mongodb');
 
 const useDb = process.env.USE_DB === 'true';
 
@@ -173,7 +174,11 @@ const PostModel = {
   async find(query = {}) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('posts').find(query).sort({ createdAt: -1 }).toArray();
+      const posts = await db.collection('posts').find(query).sort({ createdAt: -1 }).toArray();
+      return posts.map(post => ({
+        ...post,
+        id: post._id.toString()
+      }));
     } else {
       let posts = mockPosts.map(post => ({
         ...post,
@@ -213,7 +218,6 @@ const PostModel = {
       // If not found by id field, try by _id field (for backward compatibility)
       if (!post) {
         try {
-          const { ObjectId } = require('mongodb');
           // Check if the searchId is a valid ObjectId format
           if (ObjectId.isValid(searchId)) {
             post = await db.collection('posts').findOne({ _id: new ObjectId(searchId) });
@@ -223,7 +227,13 @@ const PostModel = {
         }
       }
       
-      return post;
+      if (post) {
+        return {
+          ...post,
+          id: post._id.toString()
+        };
+      }
+      return null;
     } else {
       const post = mockPosts.find(p => p.id === id);
       if (post) {
@@ -241,7 +251,11 @@ const PostModel = {
   async findByAuthor(authorId) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('posts').find({ authorId: authorId }).sort({ createdAt: -1 }).toArray();
+      const posts = await db.collection('posts').find({ authorId: authorId }).sort({ createdAt: -1 }).toArray();
+      return posts.map(post => ({
+        ...post,
+        id: post._id.toString()
+      }));
     } else {
       return mockPosts
         .filter(p => p.authorId === authorId)
@@ -258,7 +272,11 @@ const PostModel = {
   async findByCommunity(communityId) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('posts').find({ communityId: communityId }).sort({ createdAt: -1 }).toArray();
+      const posts = await db.collection('posts').find({ communityId: communityId }).sort({ createdAt: -1 }).toArray();
+      return posts.map(post => ({
+        ...post,
+        id: post._id.toString()
+      }));
     } else {
       return mockPosts
         .filter(p => p.communityId === communityId)
@@ -276,12 +294,16 @@ const PostModel = {
     if (useDb) {
       const db = await connectDB();
       // Find posts from subscribed communities OR posts by the user
-      return db.collection('posts').find({
+      const posts = await db.collection('posts').find({
         $or: [
           { communityId: { $in: communityIds } },
           { authorId: authorId }
         ]
       }).sort({ createdAt: -1 }).toArray();
+      return posts.map(post => ({
+        ...post,
+        id: post._id.toString()
+      }));
     } else {
       return mockPosts
         .filter(p => communityIds.includes(p.communityId) || p.authorId === authorId)
@@ -298,18 +320,20 @@ const PostModel = {
   async create(data) {
     if (useDb) {
       const db = await connectDB();
-      const timestamp = Date.now();
-      const random = Math.floor(Math.random() * 1000);
-      const postId = `${timestamp}-${random}`;
       const postData = {
-        id: postId, // Add explicit id field for consistency
         ...data,
         likes: [],
         likesCount: 0,
-        comments: []
+        comments: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
       const result = await db.collection('posts').insertOne(postData);
-      return { _id: result.insertedId, id: postId, ...postData };
+      return { 
+        _id: result.insertedId, 
+        ...postData,
+        id: result.insertedId.toString()
+      };
     } else {
       const timestamp = Date.now();
       const random = Math.floor(Math.random() * 1000);
@@ -335,7 +359,13 @@ const PostModel = {
         { $set: { ...data, updatedAt: new Date() } },
         { returnDocument: 'after' }
       );
-      return result;
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const idx = mockPosts.findIndex(p => p.id === id);
       if (idx === -1) return null;
@@ -351,8 +381,29 @@ const PostModel = {
   async delete(id) {
     if (useDb) {
       const db = await connectDB();
-      const result = await db.collection('posts').findOneAndDelete({ id: id });
-      return result;
+      let result;
+      
+      // Try to delete by _id first (for MongoDB ObjectId)
+      try {
+        if (ObjectId.isValid(id)) {
+          result = await db.collection('posts').findOneAndDelete({ _id: new ObjectId(id) });
+        }
+      } catch (error) {
+        // If ObjectId conversion fails, try as string
+      }
+      
+      // If not deleted by _id, try by custom id field
+      if (!result) {
+        result = await db.collection('posts').findOneAndDelete({ id: id });
+      }
+      
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const idx = mockPosts.findIndex(p => p.id === id);
       if (idx === -1) return null;
@@ -381,19 +432,49 @@ const PostModel = {
         likes.push(userId);
       }
 
-      // Update using the id field (our standard approach)
-      const result = await db.collection('posts').findOneAndUpdate(
-        { id: postId },
-        { 
-          $set: { 
-            likes: likes,
-            likesCount: likes.length,
-            updatedAt: new Date() 
-          } 
-        },
-        { returnDocument: 'after' }
-      );
-      return result;
+      // Update using the appropriate field (_id or custom id)
+      let result;
+      
+      // Try to update by _id first (for MongoDB ObjectId)
+      try {
+        if (ObjectId.isValid(postId)) {
+          result = await db.collection('posts').findOneAndUpdate(
+            { _id: new ObjectId(postId) },
+            { 
+              $set: { 
+                likes: likes,
+                likesCount: likes.length,
+                updatedAt: new Date() 
+              } 
+            },
+            { returnDocument: 'after' }
+          );
+        }
+      } catch (error) {
+        // If ObjectId conversion fails, continue to try custom id
+      }
+      
+      // If not updated by _id, try by custom id field
+      if (!result) {
+        result = await db.collection('posts').findOneAndUpdate(
+          { id: postId },
+          { 
+            $set: { 
+              likes: likes,
+              likesCount: likes.length,
+              updatedAt: new Date() 
+            } 
+          },
+          { returnDocument: 'after' }
+        );
+      }
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const post = mockPosts.find(p => p.id === postId);
       if (!post) return null;
@@ -430,15 +511,43 @@ const PostModel = {
         createdAt: new Date()
       };
 
-      const result = await db.collection('posts').findOneAndUpdate(
-        { id: postId },
-        { 
-          $push: { comments: comment },
-          $set: { updatedAt: new Date() }
-        },
-        { returnDocument: 'after' }
-      );
-      return result;
+      // Update using the appropriate field (_id or custom id)
+      let result;
+      
+      // Try to update by _id first (for MongoDB ObjectId)
+      try {
+        if (ObjectId.isValid(postId)) {
+          result = await db.collection('posts').findOneAndUpdate(
+            { _id: new ObjectId(postId) },
+            { 
+              $push: { comments: comment },
+              $set: { updatedAt: new Date() }
+            },
+            { returnDocument: 'after' }
+          );
+        }
+      } catch (error) {
+        // If ObjectId conversion fails, continue to try custom id
+      }
+      
+      // If not updated by _id, try by custom id field
+      if (!result) {
+        result = await db.collection('posts').findOneAndUpdate(
+          { id: postId },
+          { 
+            $push: { comments: comment },
+            $set: { updatedAt: new Date() }
+          },
+          { returnDocument: 'after' }
+        );
+      }
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const post = mockPosts.find(p => p.id === postId);
       if (!post) return null;
@@ -460,7 +569,22 @@ const PostModel = {
   async getComments(postId) {
     if (useDb) {
       const db = await connectDB();
-      const post = await db.collection('posts').findOne({ id: postId });
+      let post;
+      
+      // Try to find by _id first (for MongoDB ObjectId)
+      try {
+        if (ObjectId.isValid(postId)) {
+          post = await db.collection('posts').findOne({ _id: new ObjectId(postId) });
+        }
+      } catch (error) {
+        // If ObjectId conversion fails, try as string
+      }
+      
+      // If not found by _id, try by custom id field
+      if (!post) {
+        post = await db.collection('posts').findOne({ id: postId });
+      }
+      
       return post ? (post.comments || []) : [];
     } else {
       const post = mockPosts.find(p => p.id === postId);
@@ -472,21 +596,55 @@ const PostModel = {
   async updateComment(postId, commentId, newText) {
     if (useDb) {
       const db = await connectDB();
-      const result = await db.collection('posts').findOneAndUpdate(
-        { 
-          id: postId,
-          'comments.id': commentId
-        },
-        { 
-          $set: { 
-            'comments.$.text': newText,
-            'comments.$.updatedAt': new Date(),
-            updatedAt: new Date()
-          }
-        },
-        { returnDocument: 'after' }
-      );
-      return result;
+      let result;
+      
+      // Try to update by _id first (for MongoDB ObjectId)
+      try {
+        if (ObjectId.isValid(postId)) {
+          result = await db.collection('posts').findOneAndUpdate(
+            { 
+              _id: new ObjectId(postId),
+              'comments.id': commentId
+            },
+            { 
+              $set: { 
+                'comments.$.text': newText,
+                'comments.$.updatedAt': new Date(),
+                updatedAt: new Date()
+              }
+            },
+            { returnDocument: 'after' }
+          );
+        }
+      } catch (error) {
+        // If ObjectId conversion fails, continue to try custom id
+      }
+      
+      // If not updated by _id, try by custom id field
+      if (!result) {
+        result = await db.collection('posts').findOneAndUpdate(
+          { 
+            id: postId,
+            'comments.id': commentId
+          },
+          { 
+            $set: { 
+              'comments.$.text': newText,
+              'comments.$.updatedAt': new Date(),
+              updatedAt: new Date()
+            }
+          },
+          { returnDocument: 'after' }
+        );
+      }
+      
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const post = mockPosts.find(p => p.id === postId);
       if (!post) return null;
@@ -505,15 +663,43 @@ const PostModel = {
   async deleteComment(postId, commentId) {
     if (useDb) {
       const db = await connectDB();
-      const result = await db.collection('posts').findOneAndUpdate(
-        { id: postId },
-        { 
-          $pull: { comments: { id: commentId } },
-          $set: { updatedAt: new Date() }
-        },
-        { returnDocument: 'after' }
-      );
-      return result;
+      let result;
+      
+      // Try to update by _id first (for MongoDB ObjectId)
+      try {
+        if (ObjectId.isValid(postId)) {
+          result = await db.collection('posts').findOneAndUpdate(
+            { _id: new ObjectId(postId) },
+            { 
+              $pull: { comments: { id: commentId } },
+              $set: { updatedAt: new Date() }
+            },
+            { returnDocument: 'after' }
+          );
+        }
+      } catch (error) {
+        // If ObjectId conversion fails, continue to try custom id
+      }
+      
+      // If not updated by _id, try by custom id field
+      if (!result) {
+        result = await db.collection('posts').findOneAndUpdate(
+          { id: postId },
+          { 
+            $pull: { comments: { id: commentId } },
+            $set: { updatedAt: new Date() }
+          },
+          { returnDocument: 'after' }
+        );
+      }
+      
+      if (result) {
+        return {
+          ...result,
+          id: result._id.toString()
+        };
+      }
+      return null;
     } else {
       const post = mockPosts.find(p => p.id === postId);
       if (!post) return null;
@@ -533,10 +719,28 @@ const PostModel = {
   async findComment(postId, commentId) {
     if (useDb) {
       const db = await connectDB();
-      const post = await db.collection('posts').findOne({ 
-        id: postId,
-        'comments.id': commentId
-      });
+      let post;
+      
+      // Try to find by _id first (for MongoDB ObjectId)
+      try {
+        if (ObjectId.isValid(postId)) {
+          post = await db.collection('posts').findOne({ 
+            _id: new ObjectId(postId),
+            'comments.id': commentId
+          });
+        }
+      } catch (error) {
+        // If ObjectId conversion fails, try as string
+      }
+      
+      // If not found by _id, try by custom id field
+      if (!post) {
+        post = await db.collection('posts').findOne({ 
+          id: postId,
+          'comments.id': commentId
+        });
+      }
+      
       if (!post) return null;
       return post.comments?.find(c => c.id === commentId) || null;
     } else {
