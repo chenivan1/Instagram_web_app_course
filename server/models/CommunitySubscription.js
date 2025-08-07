@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const connectDB = require('../db');
 
 const useDb = process.env.USE_DB === 'true';
@@ -133,7 +132,7 @@ const CommunitySubscriptionModel = {
       return { _id: result.insertedId, ...data };
     } else {
       const subscription = { 
-        id: String(Date.now()), 
+        id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`, 
         ...data,
         subscribedAt: new Date()
       };
@@ -149,7 +148,7 @@ const CommunitySubscriptionModel = {
         userId: userId, 
         communityId: communityId 
       });
-      return result.value;
+      return result;
     } else {
       const idx = mockSubscriptions.findIndex(sub => 
         sub.userId === userId && sub.communityId === communityId

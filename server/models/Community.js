@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const connectDB = require('../db');
 
 const useDb = process.env.USE_DB === 'true';
@@ -64,7 +63,7 @@ const CommunityModel = {
   async findById(id) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('communities').findOne({ _id: new ObjectId(id) });
+      return db.collection('communities').findOne({ id: id });
     } else {
       return mockCommunities.find(c => c.id === id);
     }
@@ -86,7 +85,7 @@ const CommunityModel = {
       return { _id: result.insertedId, ...data };
     } else {
       const community = { 
-        id: String(Date.now()), 
+        id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`, 
         ...data,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -100,11 +99,11 @@ const CommunityModel = {
     if (useDb) {
       const db = await connectDB();
       const result = await db.collection('communities').findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { id: id },
         { $set: { ...data, updatedAt: new Date() } },
         { returnDocument: 'after' }
       );
-      return result.value;
+      return result;
     } else {
       const idx = mockCommunities.findIndex(c => c.id === id);
       if (idx === -1) return null;
@@ -120,8 +119,8 @@ const CommunityModel = {
   async delete(id) {
     if (useDb) {
       const db = await connectDB();
-      const result = await db.collection('communities').findOneAndDelete({ _id: new ObjectId(id) });
-      return result.value;
+      const result = await db.collection('communities').findOneAndDelete({ id: id });
+      return result;
     } else {
       const idx = mockCommunities.findIndex(c => c.id === id);
       if (idx === -1) return null;

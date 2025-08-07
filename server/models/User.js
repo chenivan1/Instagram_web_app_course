@@ -1,10 +1,21 @@
-const { ObjectId } = require('mongodb');
 const connectDB = require('../db');
+const { ObjectId } = require('mongodb');
 
 const useDb = process.env.USE_DB === 'true';
 
+// Create consistent ObjectIds for existing mock users
+const mockUser1Id = new ObjectId('507f1f77bcf86cd799439001');
+const mockUser2Id = new ObjectId('507f1f77bcf86cd799439002');
+const mockUser3Id = new ObjectId('507f1f77bcf86cd799439003');
+const mockUser4Id = new ObjectId('507f1f77bcf86cd799439004');
+const mockUser5Id = new ObjectId('507f1f77bcf86cd799439005');
+const mockUser6Id = new ObjectId('507f1f77bcf86cd799439006');
+const mockUser7Id = new ObjectId('507f1f77bcf86cd799439007');
+const mockUser8Id = new ObjectId('507f1f77bcf86cd799439008');
+
 let mockUsers = [{
-  id: '1',
+  _id: mockUser1Id,
+  id: mockUser1Id.toString(),
   name: 'John Doe',
   email: 'john.doe@example.com',
   password: 'password',
@@ -17,7 +28,8 @@ let mockUsers = [{
   },
   createdAt: new Date(),
 }, {
-  id: '2',
+  _id: mockUser2Id,
+  id: mockUser2Id.toString(),
   name: 'Jane Doe',
   email: 'jane.doe@example.com',
   password: 'password',
@@ -30,7 +42,8 @@ let mockUsers = [{
   },
   createdAt: new Date(),
 }, {
-  id: '3',
+  _id: mockUser3Id,
+  id: mockUser3Id.toString(),
   name: 'Admin User',
   email: 'admin@example.com',
   password: 'admin123',
@@ -43,7 +56,8 @@ let mockUsers = [{
   },
   createdAt: new Date(),
 }, {
-  id: '4',
+  _id: mockUser4Id,
+  id: mockUser4Id.toString(),
   name: 'Alice Johnson',
   email: 'alice.johnson@example.com',
   password: 'password123',
@@ -56,7 +70,8 @@ let mockUsers = [{
   },
   createdAt: new Date(),
 }, {
-  id: '5',
+  _id: mockUser5Id,
+  id: mockUser5Id.toString(),
   name: 'Bob Wilson',
   email: 'bob.wilson@example.com',
   password: 'password123',
@@ -69,7 +84,8 @@ let mockUsers = [{
   },
   createdAt: new Date(),
 }, {
-  id: '6',
+  _id: mockUser6Id,
+  id: mockUser6Id.toString(),
   name: 'Carol Davis',
   email: 'carol.davis@example.com',
   password: 'password123',
@@ -82,7 +98,8 @@ let mockUsers = [{
   },
   createdAt: new Date(),
 }, {
-  id: '7',
+  _id: mockUser7Id,
+  id: mockUser7Id.toString(),
   name: 'David Brown',
   email: 'david.brown@example.com',
   password: 'password123',
@@ -95,7 +112,8 @@ let mockUsers = [{
   },
   createdAt: new Date(),
 }, {
-  id: '8',
+  _id: mockUser8Id,
+  id: mockUser8Id.toString(),
   name: 'Emma Garcia',
   email: 'emma.garcia@example.com',
   password: 'password123',
@@ -121,7 +139,7 @@ const UserModel = {
   async findById(id) {
     if (useDb) {
       const db = await connectDB();
-      return db.collection('users').findOne({ _id: new ObjectId(id) });
+      return db.collection('users').findOne({ id: id });
     } else {
       return mockUsers.find(u => u.id === id);
     }
@@ -129,11 +147,22 @@ const UserModel = {
   async create(data) {
     if (useDb) {
       const db = await connectDB();
-      const result = await db.collection('users').insertOne(data);
-      return { _id: result.insertedId, ...data };
+      // Generate a new ObjectId
+      const objectId = new ObjectId();
+      // Create user data with both _id (ObjectId) and id (string)
+      const userData = {
+        _id: objectId,
+        id: objectId.toString(),
+        ...data
+      };
+      const result = await db.collection('users').insertOne(userData);
+      return userData;
     } else {
+      // For mock data, generate a new ObjectId and use it for both _id and id
+      const objectId = new ObjectId();
       const user = { 
-        id: String(Date.now()), 
+        _id: objectId,
+        id: objectId.toString(),
         ...data,
         profilePicture: data.profilePicture || null // Ensure profilePicture field exists
       };
@@ -145,11 +174,11 @@ const UserModel = {
     if (useDb) {
       const db = await connectDB();
       const result = await db.collection('users').findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { id: id },
         { $set: data },
         { returnDocument: 'after' }
       );
-      return result.value;
+      return result;
     } else {
       const idx = mockUsers.findIndex(u => u.id === id);
       if (idx === -1) return null;
@@ -160,8 +189,8 @@ const UserModel = {
   async delete(id) {
     if (useDb) {
       const db = await connectDB();
-      const result = await db.collection('users').findOneAndDelete({ _id: new ObjectId(id) });
-      return result.value;
+      const result = await db.collection('users').findOneAndDelete({ id: id });
+      return result;
     } else {
       const idx = mockUsers.findIndex(u => u.id === id);
       if (idx === -1) return null;

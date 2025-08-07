@@ -221,6 +221,9 @@ function subscribeToCommunity(communityId) {
                 showAlert('Successfully subscribed to community!', 'success');
                 userSubscriptions.add(communityId);
                 loadAllCommunities(); // Refresh the display
+                
+                // Also refresh subscribed communities tab
+                loadSubscribedCommunities();
             } else {
                 const error = JSON.parse(xhr.responseText);
                 showAlert(error.error || 'Failed to subscribe', 'danger');
@@ -305,6 +308,10 @@ function createCommunity() {
                     // Refresh communities
                     loadAllCommunities();
                     userSubscriptions.add(result.community.id);
+                    
+                    // Also refresh subscription tabs to show the new community
+                    loadSubscribedCommunities();
+                    loadManagedCommunities();
                 } catch (e) {
                     console.error('Error parsing success response:', e);
                     showAlert('Community created but failed to update display', 'warning');
