@@ -17,6 +17,7 @@ const editCommunityBtn = document.getElementById('editCommunityBtn');
 document.addEventListener('DOMContentLoaded', function() {
     loadAllCommunities();
     setupEventListeners();
+    checkAdminAccess();
     
     // Tab switching
     document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
@@ -49,6 +50,12 @@ function setupEventListeners() {
     // Edit community
     if (editCommunityBtn) {
         editCommunityBtn.addEventListener('click', updateCommunity);
+    }
+    
+    // Logout functionality
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
     }
     
     // Form validation
@@ -594,4 +601,53 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+// Check admin access and show/hide manage users button
+function checkAdminAccess() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '/user/current', true);
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.user && response.user.isAdmin) {
+                        const manageUsersBtn = document.querySelector('.sidebar_btn[onclick*="user-management"]');
+                        if (manageUsersBtn) {
+                            manageUsersBtn.style.display = 'block';
+                        }
+                    } else {
+                        const manageUsersBtn = document.querySelector('.sidebar_btn[onclick*="user-management"]');
+                        if (manageUsersBtn) {
+                            manageUsersBtn.style.display = 'none';
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error parsing admin check response:', e);
+                }
+            }
+        }
+    };
+    
+    xhr.send();
+}
+
+// Handle logout functionality
+function handleLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/user/logout', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    window.location.href = '/login';
+                } else {
+                    showAlert('Logout failed. Please try again.', 'danger');
+                }
+            }
+        };
+        xhr.send();
+    }
 }
